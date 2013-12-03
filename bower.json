@@ -1,0 +1,29 @@
+{
+  "name": "raspicam-interface",
+  "version": "0.0.0",
+  "description": "Raspberry Pi camera with web interface",
+  "keywords": [
+    "raspberry",
+    "pi",
+    "camera"
+  ],
+  "authors": [
+    "matt foster"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "vendor",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "backbone-amd": "~1.1.0",
+    "backbone.babysitter": "~0.0.6",
+    "backbone.wreqr": "~0.2.0",
+    "marionette": "~1.3.0",
+    "requirejs": "~2.1.9"
+  }
+}
