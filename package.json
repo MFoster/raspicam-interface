@@ -5,12 +5,12 @@
   "private": false,
   "dependencies": {
     "express": "3.x",
-    "bower": "1.2.x",
-    "socket.io": "0.9.x",
+    //"socket.io": "0.9.x",
     "debounce": "0.0.3",
     "raspicam": "~0.2.10"
   },
   "devDependencies": {
+    "bower": "1.2.x",
     "less": "~1.5.1",
     "grunt": "~0.4.2",
     "grunt-contrib-less": "~0.8.2",
