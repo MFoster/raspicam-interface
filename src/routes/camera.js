@@ -6,7 +6,7 @@ var cameraConfig = {
 	debounceTime : 500
 };
 
-var cameraFilePath = __dirname + "../public/images/camera/photo/";
+var cameraFilePath = __dirname + "/../public/images/camera/photo/";
 
 exports.photo = function(request, response){
 	var name = new Date().getTime() + ".jpg";
