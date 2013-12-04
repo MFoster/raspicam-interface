@@ -1,5 +1,21 @@
 @import "../../vendor/bootstrap/less/bootstrap.less";
 
-.derp{
-	display:none;
+.raspicam-interface-still{
+	&:extend(.container all);
+
+	div{
+		&:extend(.well);
+		.make-md-column(6);
+		margin:auto;
+	}
+	input[type=submit]{
+		&:extend(.btn all, .btn-primary, .btn-lg);
+	}
+	form{
+		clear:both;
+		padding-top:5px;
+	}
+	img{
+		width:100%;
+	}
 }

@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <title>Raspberry Pi Camera Web Interface for Stills</title>
+    <link rel='stylesheet' href='/stylesheets/main.css' />
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+  	<div class="raspicam-interface-still">
+	    <div><img src="#" alt="Raspberry Pi Camera Image" id="main-image"/></div>
+	    <form action="/capture"><input tabindex="0" type="submit" value="Capture"></form>
+  	</div>
     <script type="text/javascript" data-main="/javascripts/main.js" src="/javascripts/require.js"></script>
   </body>
 </html>
