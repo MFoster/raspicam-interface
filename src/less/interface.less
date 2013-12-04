@@ -1,12 +1,13 @@
 @import "../../vendor/bootstrap/less/bootstrap.less";
 
-.raspicam-interface-still{
+.raspicam-interface-photo{
 	&:extend(.container all);
 
 	div{
 		&:extend(.well);
 		.make-md-column(6);
 		margin:auto;
+		text-align:center;
 	}
 	input[type=submit]{
 		&:extend(.btn all, .btn-primary, .btn-lg);
@@ -16,6 +17,6 @@
 		padding-top:5px;
 	}
 	img{
-		width:100%;
+		margin:auto;
 	}
 }

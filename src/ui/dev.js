@@ -1,7 +1,7 @@
 require(["backbone"], function(Backbone){
-	var FormView = Backbone.FormView = Backbone.View.extend({
+	var FormView = Backbone.View.extend({
 		events : {
-			"submit" : "handleSubmit"
+			"submit" : "handleSubmit",
 		},
 		handleSubmit : function(e){
 			try{
@@ -13,15 +13,26 @@ require(["backbone"], function(Backbone){
 			return false;
 		},
 		render : function(){}
+	});
+
+	var ImageView = Backbone.View.extend({
+		render : function(){
+			this.$el.attr("src", this.model.get("src"));
+		}
 	})
 
 	var form = new FormView({ el : ".raspicam-interface-photo" });
-
+	var previewModel = new Backbone.Model({ });
+	var preview = new ImageView({ el : ".raspicam-interface-photo img", model : previewModel });
+	var prefix = "/images/camera/photo/";
 	form.on("submit", handleSubmit);
 
-
 	function handleSubmit(e){
-		jQuery.get({
+		sendCapture();
+	}
+
+	function sendCapture(){
+		jQuery.ajax({
 			url : "/capture",
 			success : handleSuccess,
 			failure : handleFailure
@@ -29,6 +40,7 @@ require(["backbone"], function(Backbone){
 	}
 
 	function handleSuccess(response){
+		previewModel.set("src", prefix + response.name);
 		console.log("Succes! %o", response);
 	}
 
