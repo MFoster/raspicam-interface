@@ -663,37 +663,30 @@ pre code {
   max-height: 340px;
   overflow-y: scroll;
 }
-.container,
-.raspicam-interface-photo {
+.container {
   margin-right: auto;
   margin-left: auto;
   padding-left: 15px;
   padding-right: 15px;
 }
 .container:before,
-.container:after,
-.raspicam-interface-photo:before,
-.raspicam-interface-photo:after {
+.container:after {
   content: " ";
   /* 1 */
   display: table;
   /* 2 */
 }
-.container:after,
-.raspicam-interface-photo:after {
+.container:after {
   clear: both;
 }
 .container:before,
-.container:after,
-.raspicam-interface-photo:before,
-.raspicam-interface-photo:after {
+.container:after {
   content: " ";
   /* 1 */
   display: table;
   /* 2 */
 }
-.container:after,
-.raspicam-interface-photo:after {
+.container:after {
   clear: both;
 }
 .row {
@@ -883,8 +876,7 @@ pre code {
   margin-left: 0%;
 }
 @media (min-width: 768px) {
-  .container,
-  .raspicam-interface-photo {
+  .container {
     width: 750px;
   }
   .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11 {
@@ -1045,8 +1037,7 @@ pre code {
   }
 }
 @media (min-width: 992px) {
-  .container,
-  .raspicam-interface-photo {
+  .container {
     width: 970px;
   }
   .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11 {
@@ -1207,8 +1198,7 @@ pre code {
   }
 }
 @media (min-width: 1200px) {
-  .container,
-  .raspicam-interface-photo {
+  .container {
     width: 1170px;
   }
   .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11 {
@@ -3793,17 +3783,13 @@ textarea.input-group-sm > .input-group-btn > .raspicam-interface-photo input[typ
   }
 }
 .container > .navbar-header,
-.container > .navbar-collapse,
-.raspicam-interface-photo > .navbar-header,
-.raspicam-interface-photo > .navbar-collapse {
+.container > .navbar-collapse {
   margin-right: -15px;
   margin-left: -15px;
 }
 @media (min-width: 768px) {
   .container > .navbar-header,
-  .container > .navbar-collapse,
-  .raspicam-interface-photo > .navbar-header,
-  .raspicam-interface-photo > .navbar-collapse {
+  .container > .navbar-collapse {
     margin-right: 0;
     margin-left: 0;
   }
@@ -3850,8 +3836,7 @@ textarea.input-group-sm > .input-group-btn > .raspicam-interface-photo input[typ
   text-decoration: none;
 }
 @media (min-width: 768px) {
-  .navbar > .container .navbar-brand,
-  .navbar > .raspicam-interface-photo .navbar-brand {
+  .navbar > .container .navbar-brand {
     margin-left: -15px;
   }
 }
@@ -4489,8 +4474,7 @@ a.list-group-item.active > .badge,
 .jumbotron p {
   line-height: 1.4;
 }
-.container .jumbotron,
-.raspicam-interface-photo .jumbotron {
+.container .jumbotron {
   border-radius: 6px;
 }
 @media screen and (min-width: 768px) {
@@ -4498,8 +4482,7 @@ a.list-group-item.active > .badge,
     padding-top: 48px;
     padding-bottom: 48px;
   }
-  .container .jumbotron,
-  .raspicam-interface-photo .jumbotron {
+  .container .jumbotron {
     padding-left: 60px;
     padding-right: 60px;
   }
@@ -5051,8 +5034,7 @@ a.list-group-item.active:focus .list-group-item-text {
 .panel-info > .panel-footer + .panel-collapse .panel-body {
   border-bottom-color: #bce8f1;
 }
-.well,
-.raspicam-interface-photo div {
+.well {
   min-height: 20px;
   padding: 19px;
   margin-bottom: 20px;
@@ -6085,19 +6067,21 @@ td.visible-print {
     display: none !important;
   }
 }
-.raspicam-interface-photo div {
+.raspicam-interface-photo {
   position: relative;
   min-height: 1px;
   padding-left: 15px;
   padding-right: 15px;
   margin: auto;
-  text-align: center;
 }
 @media (min-width: 992px) {
-  .raspicam-interface-photo div {
+  .raspicam-interface-photo {
     float: left;
     width: 50%;
   }
+}
+.raspicam-interface-photo .raspicam-wrap {
+  text-align: center;
 }
 .raspicam-interface-photo form {
   clear: both;
@@ -6105,4 +6089,7 @@ td.visible-print {
 }
 .raspicam-interface-photo img {
   margin: auto;
+}
+.container .raspicam-interface-photo {
+  float: none;
 }

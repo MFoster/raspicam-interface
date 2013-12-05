@@ -5,10 +5,21 @@
     <link rel='stylesheet' href='/stylesheets/main.css' />
   </head>
   <body>
-  	<div class="raspicam-interface-photo">
-	    <div><img src="/images/camera_shutter.png" alt="Raspberry Pi Camera Image" id="main-image"/></div>
-	    <form action="/capture"><input tabindex="0" type="submit" value="Capture"></form>
-  	</div>
+  	<div class="container">
+  		<div class="raspicam-interface-photo">
+  			<div class="panel panel-default">
+		  		<div class="panel-body">
+		  			<div class="raspicam-wrap">
+					    <div><img src="/images/camera_shutter.png" alt="Raspberry Pi Camera Image" id="main-image"/></div>
+				  	</div>
+		  		</div>
+					<div class="panel-footer">
+						<form action="/capture"><input tabindex="0" type="submit" value="Capture"></form>
+					</div>
+	  		</div>	
+	  	</div>
+	  </div>
+
     <script type="text/javascript" data-main="/javascripts/main.js" src="/javascripts/require.js"></script>
   </body>
 </html>
