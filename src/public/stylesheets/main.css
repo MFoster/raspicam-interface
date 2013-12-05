@@ -1998,14 +1998,22 @@ fieldset[disabled] .btn-default.active {
 .btn-primary:focus,
 .btn-primary:active,
 .btn-primary.active,
-.open .dropdown-toggle.btn-primary {
+.open .dropdown-toggle.btn-primary,
+.raspicam-interface-photo input[type=submit]:hover,
+.raspicam-interface-photo input[type=submit]:focus,
+.raspicam-interface-photo input[type=submit]:active,
+.raspicam-interface-photo input[type=submit].active,
+.open .dropdown-toggle.raspicam-interface-photo input[type=submit] {
   color: #ffffff;
   background-color: #3276b1;
   border-color: #285e8e;
 }
 .btn-primary:active,
 .btn-primary.active,
-.open .dropdown-toggle.btn-primary {
+.open .dropdown-toggle.btn-primary,
+.raspicam-interface-photo input[type=submit]:active,
+.raspicam-interface-photo input[type=submit].active,
+.open .dropdown-toggle.raspicam-interface-photo input[type=submit] {
   background-image: none;
 }
 .btn-primary.disabled,
@@ -2022,7 +2030,22 @@ fieldset[disabled] .btn-primary:focus,
 fieldset[disabled] .btn-primary:active,
 .btn-primary.disabled.active,
 .btn-primary[disabled].active,
-fieldset[disabled] .btn-primary.active {
+fieldset[disabled] .btn-primary.active,
+.raspicam-interface-photo input[type=submit].disabled,
+.raspicam-interface-photo input[type=submit][disabled],
+fieldset[disabled] .raspicam-interface-photo input[type=submit],
+.raspicam-interface-photo input[type=submit].disabled:hover,
+.raspicam-interface-photo input[type=submit][disabled]:hover,
+fieldset[disabled] .raspicam-interface-photo input[type=submit]:hover,
+.raspicam-interface-photo input[type=submit].disabled:focus,
+.raspicam-interface-photo input[type=submit][disabled]:focus,
+fieldset[disabled] .raspicam-interface-photo input[type=submit]:focus,
+.raspicam-interface-photo input[type=submit].disabled:active,
+.raspicam-interface-photo input[type=submit][disabled]:active,
+fieldset[disabled] .raspicam-interface-photo input[type=submit]:active,
+.raspicam-interface-photo input[type=submit].disabled.active,
+.raspicam-interface-photo input[type=submit][disabled].active,
+fieldset[disabled] .raspicam-interface-photo input[type=submit].active {
   background-color: #428bca;
   border-color: #357ebd;
 }
@@ -3011,7 +3034,8 @@ input[type="button"].btn-block {
 .btn-success .caret,
 .btn-warning .caret,
 .btn-danger .caret,
-.btn-info .caret {
+.btn-info .caret,
+.raspicam-interface-photo input[type=submit] .caret {
   border-top-color: #fff;
 }
 .dropup .btn-default .caret {
@@ -3021,7 +3045,8 @@ input[type="button"].btn-block {
 .dropup .btn-success .caret,
 .dropup .btn-warning .caret,
 .dropup .btn-danger .caret,
-.dropup .btn-info .caret {
+.dropup .btn-info .caret,
+.dropup .raspicam-interface-photo input[type=submit] .caret {
   border-bottom-color: #fff;
 }
 .btn-group,
