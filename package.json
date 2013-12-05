@@ -5,6 +5,7 @@
   "private": false,
   "dependencies": {
     "express": "3.x",
+    "ejs": "*",
     "debounce": "0.0.3",
     "raspicam": "~0.2.10"
   },
