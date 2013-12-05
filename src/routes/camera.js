@@ -16,4 +16,5 @@ exports.photo = function(request, response){
 	camera.on("exit", function(){
 		response.send({ message : "Successfully captured image", name : name });
 	});
+	camera.start();
 }
