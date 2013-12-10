@@ -1,0 +1,5 @@
+<ul>
+	<% _.each(items, function(item){ console.log("inside each %o", item); %>
+	<li><a href="#" data-image-name="<%= item.name %>"><%= item.year %></a></li>
+	<% }); %>
+</ul>
