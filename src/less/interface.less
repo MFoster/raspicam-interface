@@ -21,3 +21,16 @@
 .container .raspicam-interface-photo{
 	float:none;
 }
+.photo-list{
+	.make-md-column(4);
+}
+.photo-image{
+	.make-md-column(8);
+}
+.raspicam-interface-history{
+	.photo-list ul{
+		&:extend(.nav all, .nav-pills all, .nav-stacked all);
+	}
+
+
+}

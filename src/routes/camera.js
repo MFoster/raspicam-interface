@@ -1,5 +1,6 @@
 var RaspiCam = require("raspicam");
 var debounce = require("debounce");
+var fs = require("fs");
 var cameraConfig = {
 	mode : "photo",
 	timelapse : 100
@@ -17,4 +18,20 @@ exports.photo = function(request, response){
 		response.send({ message : "Successfully captured image", name : name });
 	});
 	camera.start();
+}
+
+exports.photoHistory = function(request, response){
+	response.render("photoHistory");
+}
+
+exports.photoHistoryList = function(request, response){
+	var ret = [];
+	fs.readdir(cameraFilePath, function(err, files){
+		files.forEach(function(file){
+			ret.push({ name : file });
+		})
+
+    response.writeHead(200, { 'Content-Type': 'application/json' });
+		response.send(ret);
+	});
 }

@@ -14,13 +14,39 @@ module.exports = function(grunt) {
       } 
     },
     requirejs: {
-      compile : {
+      capture : {
         options : {
-          name : "src/ui/dev.js",
+          name : "src/ui/capture.js",
           mainConfigFile : "config/dev.js",
           baseUrl : "./",
-          out : "src/public/javascripts/main.js",
-
+          out : "src/public/javascripts/capture.js",
+        }
+      },
+      history : {
+        options : {
+          name : "src/ui/history/main",
+          mainConfigFile : "config/dev.js",
+          baseUrl : "./",
+          out : "src/public/javascripts/history.js",
+          optimize : "none"
+        }
+      }
+    },
+    jst : {
+      compile : {
+        options : {
+          amd : true,
+          namespace : 'compiled',
+          processName : function(name){
+            var parts = name.split('/');
+            var namespace = parts[parts.length - 3];
+            var name = parts[parts.length - 1];
+            name = (name.match(/^[^.]+/))[0];
+            return namespace + '/' + name;
+          }
+        },
+        files : {
+          "src/ui/template/compile.js" : "src/ui/**/template/*.html"
         }
       }
     },
@@ -32,8 +58,15 @@ module.exports = function(grunt) {
           interrupt : true
         }
       },
+      jst : {
+        files : 'src/ui/**/template/*.html',
+        tasks : ['jst'],
+        options : {
+          interrupt : true
+        }
+      },
       require : {
-        files : 'src/ui/*.js',
+        files : 'src/ui/**/*.js',
         tasks : ['requirejs'],
         options : {
           interrupt : true
@@ -48,7 +81,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
+  grunt.loadNpmTasks('grunt-contrib-jst');
   // Default task(s).
-  grunt.registerTask('default', ['less', 'requirejs', 'watch']);
+  grunt.registerTask('default', ['less', 'requirejs', 'jst', 'watch']);
 
 };
