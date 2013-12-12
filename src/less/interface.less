@@ -1,5 +1,10 @@
 @import "../../vendor/bootstrap/less/bootstrap.less";
-
+nav{
+	&:extend(.navbar all, .navbar-default all);
+	ul{
+		&:extend(.nav all, .navbar-nav all);
+	}
+}
 .raspicam-interface-photo{
 	.make-md-column(8);
 	margin:auto;
@@ -23,6 +28,8 @@
 }
 .photo-list{
 	.make-md-column(4);
+	height:500px;
+	overflow-x:scroll;
 }
 .photo-image{
 	.make-md-column(8);

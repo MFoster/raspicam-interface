@@ -14227,10 +14227,42 @@ __p += '<ul>\n\t';
 __p += '\n\t<li><a href="#" data-image-name="' +
 ((__t = ( item.name )) == null ? '' : __t) +
 '">' +
+((__t = ( getLongDay(item.day) )) == null ? '' : __t) +
+', ' +
+((__t = ( getLongMonth(item.month) )) == null ? '' : __t) +
+' ' +
+((__t = ( item.date )) == null ? '' : __t) +
+'' +
+((__t = ( getDateSuffix(item.date) )) == null ? '' : __t) +
+' ' +
 ((__t = ( item.year )) == null ? '' : __t) +
+' ' +
+((__t = ( zeroPad(item.hour) )) == null ? '' : __t) +
+':' +
+((__t = ( zeroPad(item.minute) )) == null ? '' : __t) +
 '</a></li>\n\t';
  }); ;
 __p += '\n</ul>';
+
+}
+return __p
+};
+
+this["compiled"]["layout/full-width"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<header>\n\t<nav></nav>\n</header>\n<section id="content"></section>\n<footer></footer>';
+
+}
+return __p
+};
+
+this["compiled"]["navigation/nav-list"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<ul>\n\t<li><a href="#">Capture</a></li>\n\t<li><a href="#">History</a></li>\n</ul>';
 
 }
 return __p
@@ -14271,6 +14303,26 @@ define('app',["marionette", "src/ui/template/cache"], function(Marionette, fcomp
 
 	return app; 
 });
+define('src/ui/layout/PageLayout',["marionette"], function(Marionette){
+
+	return Marionette.Layout.extend({
+		template : "layout/full-width",
+		regions : {
+			nav : "nav",
+			content : "#content",
+			footer : "footer"
+		}
+	})
+
+});
+define('src/ui/layout/main',["app", "./PageLayout"], function(app, PageLayout){
+	var layout = new PageLayout();
+
+	app.container.show(layout);
+
+	return layout;
+
+});
 define('src/ui/history/PhotoListModel',["backbone"], function(Backbone){
 	return Backbone.Model.extend({
 		parse : function(response){
@@ -14301,8 +14353,34 @@ define('src/ui/history/PhotoListCollection',["backbone", "./PhotoListModel"], fu
 	});
 });
 define('src/ui/history/PhotoListView',["marionette"], function(Marionette){
+	var longMonth  = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+      shortDay   =  ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+		  longDay    = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+		  shortMonth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+		  suffix = ["st", "nd", "rd", "th"];
 	return Marionette.ItemView.extend({
 		template : "history/photo-list",
+		templateHelpers : {
+			getLongMonth : function(num){
+				return longMonth[num];
+			},
+			getShortMonth : function(num){
+				return shortMonth[num];
+			},
+			getLongDay : function(num){
+				return longDay[num];
+			},
+			getShortDay : function(num){
+				return shortDay[num];
+			},
+			zeroPad : function(num){
+				return num >= 10 ? num : '0' + num;
+			},
+			getDateSuffix : function(num){
+				var value = Math.min(num % 10, 3);
+				return suffix[value];
+			}
+		},
 	});
 });
 
@@ -14336,28 +14414,42 @@ define('src/ui/history/PhotoListController',["marionette", "backbone", "./PhotoL
 			this.layout.on("render", function(){
 				self.layout.list.show(self.listView);
 			});
+			this.layout.once("render", function(){
+				self.collection.fetch();
+			})
 			this.collection.on('sync', this.layout.render);
 		},
 		handlePhotoClick : function(e){
 			this.layout.ui.photo.attr("src", "/images/camera/photo/" + e.target.getAttribute("data-image-name"));
-		},
-		start : function(){
-			this.collection.fetch();
 		}
 	});
 });
-define('src/ui/history/main',["app", "marionette", "./PhotoListController"], function(app, Marionette, PhotoListController){
+define('src/ui/navigation/NavView',["marionette"], function(Marionette){
+	return Marionette.ItemView.extend({
+		template : "navigation/nav-list"
+	})
+});
+define('src/ui/navigation/main',["src/ui/layout/main", "./NavView"], function(layout, NavView){
+
+	var view = new NavView();
+
+	layout.nav.show(view);
+
+	return view;
+	
+});
+define('src/ui/history/main',["app", "src/ui/layout/main", "marionette", "./PhotoListController"], function(app, primaryLayout, Marionette, PhotoListController){
 
 	return app.module('PhotoHistory', function(module){
 		module.on('start', function(){
 			var controller = new PhotoListController();
-			app.container.show(controller.layout); 
+			primaryLayout.content.show(controller.layout); 
 			this.controller = controller;
 			controller.start();
 		});
 	});
 
 });
-require(['app', 'src/ui/history/main'], function(app){
+require(['app', 'src/ui/history/main', 'src/ui/navigation/main'], function(app){
 	app.start();
 });

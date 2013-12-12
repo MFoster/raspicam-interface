@@ -10,13 +10,13 @@ define(["marionette", "backbone", "./PhotoListCollection", "./PhotoListView", ".
 			this.layout.on("render", function(){
 				self.layout.list.show(self.listView);
 			});
+			this.layout.once("render", function(){
+				self.collection.fetch();
+			})
 			this.collection.on('sync', this.layout.render);
 		},
 		handlePhotoClick : function(e){
 			this.layout.ui.photo.attr("src", "/images/camera/photo/" + e.target.getAttribute("data-image-name"));
-		},
-		start : function(){
-			this.collection.fetch();
 		}
 	});
 })

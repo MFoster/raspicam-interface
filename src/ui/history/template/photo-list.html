@@ -1,5 +1,5 @@
 <ul>
 	<% _.each(items, function(item){ console.log("inside each %o", item); %>
-	<li><a href="#" data-image-name="<%= item.name %>"><%= item.year %></a></li>
+	<li><a href="#" data-image-name="<%= item.name %>"><%= getLongDay(item.day) %>, <%= getLongMonth(item.month) %> <%= item.date %><%= getDateSuffix(item.date) %> <%= item.year %> <%= zeroPad(item.hour) %>:<%= zeroPad(item.minute) %></a></li>
 	<% }); %>
 </ul>
