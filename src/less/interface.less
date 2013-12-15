@@ -23,6 +23,26 @@ nav{
 		margin:auto;
 	}
 }
+.photo-grid-item{
+	.make-md-column(4);
+	cursor:pointer;
+	div{
+		background-color: @gray-lighter;
+		padding:10px;
+		margin:10px;
+	}
+	img{
+		width:50%;
+		display:block;
+		margin:auto;
+	}
+	h4{
+		text-align:center;
+	}
+}
+.photo-stage button{
+	&:extend(.btn all, .btn-default all);
+}
 .container .raspicam-interface-photo{
 	float:none;
 }

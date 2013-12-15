@@ -31,7 +31,7 @@ exports.photoHistoryList = function(request, response){
 			ret.push({ name : file });
 		})
 
-    response.writeHead(200, { 'Content-Type': 'application/json' });
+    //response.writeHead(200, { 'Content-Type': 'application/json' });
 		response.send(ret);
 	});
 }

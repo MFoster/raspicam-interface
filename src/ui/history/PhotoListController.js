@@ -1,10 +1,10 @@
-define(["marionette", "backbone", "./PhotoListCollection", "./PhotoListView", "./PhotoHistoryLayout"], 
-	function(Marionette, Backbone, PhotoListCollection, PhotoListView, PhotoHistoryLayout){
+define(["marionette", "backbone", "./PhotoCollection", "./PhotoListView", "./PhotoListLayout"], 
+	function(Marionette, Backbone, PhotoCollection, PhotoListView, PhotoHistoryLayout){
 	return Marionette.Controller.extend({
 		constructor : function(options){
 			var self = this;
-			this.collection = new PhotoListCollection();
-			this.layout = new PhotoHistoryLayout();
+			this.collection = new PhotoCollection();
+			this.layout = new PhotoListLayout();
 			this.listView = new PhotoListView({ collection : this.collection });
 			this.layout.on("photo:click", this.handlePhotoClick.bind(this));
 			this.layout.on("render", function(){

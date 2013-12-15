@@ -10,7 +10,7 @@ define(['marionette', 'template'], function(Marionette, compiledTemplate){
     var template = compiledTemplate[templateId];
 
     if (!template || template.length === 0){
-      throwError("Could not find template: '" + templateId + "'", "NoTemplateError");
+      throw new Error("Could not find template: '" + templateId + "'", "NoTemplateError");
     }
 
     return template;

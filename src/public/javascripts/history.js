@@ -14197,17 +14197,50 @@ define('template',[],function(){
 
 this["compiled"] = this["compiled"] || {};
 
-this["compiled"]["history/photo-history"] = function(obj) {
+this["compiled"]["history/photo-grid-layout"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class="photo">\n\t<img src="/images/camera_shutter.png" alt="" id="photo-primary">\n</div>';
+__p += '<div class="photo-grid-layout">\n\t<div class="photo-content"></div>\n</div>';
 
 }
 return __p
 };
 
-this["compiled"]["history/photo-layout"] = function(obj) {
+this["compiled"]["history/photo-grid"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+__p += '<div class="photo-grid">\n\t';
+ _.each(items, function(item){ console.log(item);;
+__p += '\n\t<div class="photo-grid-item" data-photo-name="' +
+((__t = ( item.name )) == null ? '' : __t) +
+'">\n\t\t<div>\n\t\t\t<img src="' +
+((__t = ( getImageUrl(item.name) )) == null ? '' : __t) +
+'"/>\n\t\t\t<h4>' +
+((__t = ( item.date + 1 )) == null ? '' : __t) +
+'/' +
+((__t = ( item.month + 1 )) == null ? '' : __t) +
+'/' +
+((__t = ( item.year )) == null ? '' : __t) +
+' ' +
+((__t = ( getMeridianHour(item.hour) )) == null ? '' : __t) +
+':' +
+((__t = ( zeroPad(item.minute) )) == null ? '' : __t) +
+':' +
+((__t = ( zeroPad(item.second) )) == null ? '' : __t) +
+' ' +
+((__t = ( getMeridianIcon(item.hour) )) == null ? '' : __t) +
+'</h4>\n\t\t</div>\n\t\t\n\t</div>\n\t';
+ }); ;
+__p += '\n</div>';
+
+}
+return __p
+};
+
+this["compiled"]["history/photo-list-layout"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
@@ -14248,6 +14281,18 @@ __p += '\n</ul>';
 return __p
 };
 
+this["compiled"]["history/photo-stage"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<div class="photo-stage">\n\t<button data-action="close">Done</button>\n\t<img src="' +
+((__t = ( getImageUrl(name) )) == null ? '' : __t) +
+'" alt="" id="photo-primary">\n</div>';
+
+}
+return __p
+};
+
 this["compiled"]["layout/full-width"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
@@ -14283,7 +14328,7 @@ define('src/ui/template/cache',['marionette', 'template'], function(Marionette, 
     var template = compiledTemplate[templateId];
 
     if (!template || template.length === 0){
-      throwError("Could not find template: '" + templateId + "'", "NoTemplateError");
+      throw new Error("Could not find template: '" + templateId + "'", "NoTemplateError");
     }
 
     return template;
@@ -14323,7 +14368,7 @@ define('src/ui/layout/main',["app", "./PageLayout"], function(app, PageLayout){
 	return layout;
 
 });
-define('src/ui/history/PhotoListModel',["backbone"], function(Backbone){
+define('src/ui/history/PhotoModel',["backbone"], function(Backbone){
 	return Backbone.Model.extend({
 		parse : function(response){
 			var parts = response.name.split('.');
@@ -14346,20 +14391,23 @@ define('src/ui/history/PhotoListModel',["backbone"], function(Backbone){
 		}
 	});
 });
-define('src/ui/history/PhotoListCollection',["backbone", "./PhotoListModel"], function(Backbone, PhotoListModel){
+define('src/ui/history/PhotoCollection',["backbone", "./PhotoModel"], function(Backbone, PhotoModel){
 	return Backbone.Collection.extend({
 		url : "/photo/history/list",
-		model : PhotoListModel
+		model : PhotoModel,
+		findByName : function(name){
+			return this.find(function(model){ return name === model.get('name'); });
+		}
 	});
 });
-define('src/ui/history/PhotoListView',["marionette"], function(Marionette){
+define('src/ui/history/PhotoBaseView',["marionette"], function(Marionette){
 	var longMonth  = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-      shortDay   =  ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+      shortDay   = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
 		  longDay    = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-		  shortMonth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-		  suffix = ["st", "nd", "rd", "th"];
+		  shortMonth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+		  suffix     = ["st", "nd", "rd", "th"],
+		  prefix     = "/images/camera/photo/";
 	return Marionette.ItemView.extend({
-		template : "history/photo-list",
 		templateHelpers : {
 			getLongMonth : function(num){
 				return longMonth[num];
@@ -14379,12 +14427,28 @@ define('src/ui/history/PhotoListView',["marionette"], function(Marionette){
 			getDateSuffix : function(num){
 				var value = Math.min(num % 10, 3);
 				return suffix[value];
+			},
+			getMeridianHour : function(num){
+				return (num % 12 == 0) ? 12 : num % 12;
+			},
+			getMeridianIcon : function(num){
+				return (num >= 12) ? 'PM' : 'AM';
+			},
+			getImageUrl : function(name){
+				return prefix + name;
 			}
 		},
 	});
 });
+ 
+define('src/ui/history/PhotoListView',["./PhotoBaseView"], function(BaseView){
 
-define('src/ui/history/PhotoHistoryLayout',["marionette"], function(Marionette){
+	return BaseView.extend({
+		template : "history/photo-list"
+	});
+});
+
+define('src/ui/history/PhotoListLayout',["marionette"], function(Marionette){
 	return Marionette.Layout.extend({
 		template : "history/photo-layout",
 		regions : {
@@ -14402,13 +14466,13 @@ define('src/ui/history/PhotoHistoryLayout',["marionette"], function(Marionette){
 		}
 	})
 });
-define('src/ui/history/PhotoListController',["marionette", "backbone", "./PhotoListCollection", "./PhotoListView", "./PhotoHistoryLayout"], 
-	function(Marionette, Backbone, PhotoListCollection, PhotoListView, PhotoHistoryLayout){
+define('src/ui/history/PhotoListController',["marionette", "backbone", "./PhotoCollection", "./PhotoListView", "./PhotoListLayout"], 
+	function(Marionette, Backbone, PhotoCollection, PhotoListView, PhotoHistoryLayout){
 	return Marionette.Controller.extend({
 		constructor : function(options){
 			var self = this;
-			this.collection = new PhotoListCollection();
-			this.layout = new PhotoHistoryLayout();
+			this.collection = new PhotoCollection();
+			this.layout = new PhotoListLayout();
 			this.listView = new PhotoListView({ collection : this.collection });
 			this.layout.on("photo:click", this.handlePhotoClick.bind(this));
 			this.layout.on("render", function(){
@@ -14421,6 +14485,89 @@ define('src/ui/history/PhotoListController',["marionette", "backbone", "./PhotoL
 		},
 		handlePhotoClick : function(e){
 			this.layout.ui.photo.attr("src", "/images/camera/photo/" + e.target.getAttribute("data-image-name"));
+		}
+	});
+});
+define('src/ui/history/PhotoGridView',["./PhotoBaseView"], function(BaseView){
+	return BaseView.extend({
+		template : "history/photo-grid"
+	})
+});
+define('src/ui/history/PhotoGridLayout',["marionette"], function(Marionette){
+	return Marionette.Layout.extend({
+		template : "history/photo-grid-layout",
+		regions : {
+			content : ".photo-content"
+		},
+		events : {
+			"click .photo-grid-item" : "handleGridItemClick",
+			"click .photo-stage button[data-action=close]" : "handleCloseStage"
+		},
+		handleGridItemClick : function(e){
+			console.log("grid click");
+			var name = e.currentTarget.getAttribute("data-photo-name");
+			this.trigger("grid:item:click", e, name);
+		},
+		handleCloseStage : function(e){
+			this.trigger("grid:stage:close", e);
+		}
+	})
+});
+define('src/ui/history/PhotoStageView',["./PhotoBaseView"], function(PhotoBaseView){
+	return PhotoBaseView.extend({
+		template : "history/photo-stage"
+	});
+});
+define('src/ui/history/PhotoGridController',["marionette", "backbone", "src/ui/history/PhotoCollection", "src/ui/history/PhotoGridView", "src/ui/history/PhotoGridLayout", "src/ui/history/PhotoStageView"], 
+	function(Marionette, Backbone, PhotoCollection, PhotoGridView, PhotoGridLayout, PhotoStageView){
+
+	return Marionette.Controller.extend({
+		constructor : function(options){
+			this.collection = new PhotoCollection();
+			this.gridView = new PhotoGridView({ collection : this.collection });
+			this.layout = new PhotoGridLayout();
+			this.stageView = new PhotoStageView();
+			var self = this;
+			this.layout.once("render", function(){
+				self.collection.fetch();
+			});
+			this.collection.on("sync", this.gridView.render);
+			this.layout.on("grid:item:click", this.handleGridClick.bind(this));
+			this.layout.on("grid:stage:close", this.handleStageClose.bind(this));
+		},
+		handleGridClick : function(e, name){
+			this.trigger("grid:item:click", e, name);
+		},
+		handleStageClose : function(e){
+			this.trigger("grid:stage:close", e);
+		},
+		displayGrid : function(){
+			this.layout.content.show(this.gridView);
+		},
+		displayImage : function(name){
+			var image = this.collection.findByName(name);
+			this.stageView.model = image;
+			this.layout.content.show(this.stageView);
+		},
+		manageLayout : function(){
+			this.displayGrid();
+		},
+		routeGrid : function(){
+			this.displayGrid();
+		},
+		routeStage : function(name){
+			this.displayImage(name);
+		}
+
+	})	
+
+
+});
+define('src/ui/history/PhotoGridRouter',["marionette"], function(Marionette){
+	return Marionette.AppRouter.extend({
+		appRoutes : {
+			"photo/history/grid/:name" : "routeStage",
+			"photo/history/grid" : "routeGrid"
 		}
 	});
 });
@@ -14438,18 +14585,37 @@ define('src/ui/navigation/main',["src/ui/layout/main", "./NavView"], function(la
 	return view;
 	
 });
-define('src/ui/history/main',["app", "src/ui/layout/main", "marionette", "./PhotoListController"], function(app, primaryLayout, Marionette, PhotoListController){
-
+define('src/ui/history/main',["app", "src/ui/layout/main", "marionette", "./PhotoListController", "./PhotoGridController", "./PhotoGridRouter"], 
+	function(app, primaryLayout, Marionette, PhotoListController, PhotoGridController, PhotoGridRouter){
+	
 	return app.module('PhotoHistory', function(module){
+		// module.on('start', function(){
+		// 	var controller = new PhotoListController();
+		// 	primaryLayout.content.show(controller.layout); 
+		// 	this.controller = controller;
+		// 	controller.start();
+		// });
 		module.on('start', function(){
-			var controller = new PhotoListController();
-			primaryLayout.content.show(controller.layout); 
-			this.controller = controller;
-			controller.start();
-		});
+			var controller = new PhotoGridController();
+			var router = new PhotoGridRouter({ controller : controller });
+			primaryLayout.content.show(controller.layout);
+			controller.on('grid:item:click', function(e, name){
+				router.navigate('photo/history/grid/' + name, { trigger : true});
+			});
+
+			controller.on("grid:stage:close", function(e){
+				router.navigate('photo/history/grid', { trigger : true });
+			});
+
+		})
 	});
 
 });
-require(['app', 'src/ui/history/main', 'src/ui/navigation/main'], function(app){
+require(['app', 'backbone', 'src/ui/history/main', 'src/ui/navigation/main'], function(app, Backbone){
 	app.start();
+	setTimeout(function(){
+
+		Backbone.history.start();
+
+	}, 5000)
 });
