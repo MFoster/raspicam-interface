@@ -14749,18 +14749,17 @@ define('src/ui/capture/CaptureController',["marionette", "./CaptureLayout", "jqu
 			Marionette.Controller.prototype.constructor.apply(this, arguments);
 			this.layout = new CaptureLayout();
 			
-			this.stageModel = new PhotoModel({
-				url : "/capture"
-			});
+			this.stageModel = new PhotoModel();
+			this.stageModel.url = "/capture";
 			this.stageView = new StageView({ model : this.stageModel });
 			this.layout.on("submit", this.handleSubmit.bind(this));
 			this.stageModel.on("sync", this.stageModel.render);
 		},
 		handleSubmit : function(e){
 			var self = this;
-			this.stageModel.fetch(function(){
+			this.stageModel.fetch({ success : function(){
 				self.layout.stage.show(self.stageView);
-			});
+			}});
 		},
 		routeCapture : function(){
 			this.trigger("show", this.layout);
