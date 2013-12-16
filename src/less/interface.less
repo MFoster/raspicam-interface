@@ -1,9 +1,27 @@
 @import "../../vendor/bootstrap/less/bootstrap.less";
-nav{
-	&:extend(.navbar all, .navbar-default all);
-	ul{
-		&:extend(.nav all, .navbar-nav all);
+#application .container > div{
+	display:flex;
+	flex-flow:row wrap;
+	align-content:space-between;
+	header, section, footer{
+		flex:1 100%;
 	}
+}
+
+
+nav, footer{
+	&:extend(.navbar all, .navbar-default all);
+}
+footer{
+	&:extend(.navbar-inverse all);
+}
+nav > div > ul,
+footer > ul {
+	&:extend(.nav all, .navbar-nav all);
+}
+.photo-center-stage{
+	&:extend(.jumbotron);
+	min-height:575px;
 }
 .raspicam-interface-photo{
 	.make-md-column(8);
@@ -23,6 +41,9 @@ nav{
 		margin:auto;
 	}
 }
+li.dropdown:hover .dropdown-menu{
+	display:block;
+}
 .photo-grid-item{
 	.make-md-column(4);
 	cursor:pointer;
@@ -37,19 +58,35 @@ nav{
 		margin:auto;
 	}
 	h4{
-		text-align:center;
+		text-align: center;
 	}
 }
-.photo-stage button{
-	&:extend(.btn all, .btn-default all);
+.photo-stage{
+
+	button{
+		&:extend(.btn all, .btn-default all);
+		float:left;
+		.photo-image &{
+			display:none;
+		}
+	}
+	h4{
+		&:extend(.form-control all);
+	}
+	.header{
+		&:extend(.input-group all);
+	}
+
 }
+
+
 .container .raspicam-interface-photo{
 	float:none;
+	text-align:center;
 }
 .photo-list{
 	.make-md-column(4);
-	height:500px;
-	overflow-x:scroll;
+	overflow-y:auto;
 }
 .photo-image{
 	.make-md-column(8);
@@ -58,6 +95,17 @@ nav{
 	.photo-list ul{
 		&:extend(.nav all, .nav-pills all, .nav-stacked all);
 	}
+}
+.photo-history-layout{
+	display:flex;
+	flex-direction:row;
+  justify-content: space-around;
 
-
+	.photo-list, 
+	.photo-image{
+		flex:100% 40%;
+	}
+	.photo-image{
+		flex:100% 60%;
+	}
 }

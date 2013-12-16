@@ -14197,6 +14197,16 @@ define('template',[],function(){
 
 this["compiled"] = this["compiled"] || {};
 
+this["compiled"]["capture/capture-layout"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<div class="raspicam-interface-photo">\n\t<div class="panel panel-default">\n\t\t<div class="panel-body">\n\t\t\t<div class="photo-stage">\n\t\t    <div><img src="/images/camera_shutter.png" alt="Raspberry Pi Camera Image" id="main-image"/></div>\n\t  \t</div>\n\t\t</div>\n\t\t<div class="panel-footer">\n\t\t\t<form action="/capture"><input tabindex="0" type="submit" value="Capture"></form>\n\t\t</div>\n\t</div>\t\n</div>';
+
+}
+return __p
+};
+
 this["compiled"]["history/photo-grid-layout"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
@@ -14213,7 +14223,7 @@ var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<div class="photo-grid">\n\t';
- _.each(items, function(item){ console.log(item);;
+ _.each(items, function(item){ ;
 __p += '\n\t<div class="photo-grid-item" data-photo-name="' +
 ((__t = ( item.name )) == null ? '' : __t) +
 '">\n\t\t<div>\n\t\t\t<img src="' +
@@ -14256,7 +14266,7 @@ var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<ul>\n\t';
- _.each(items, function(item){ console.log("inside each %o", item); ;
+ _.each(items, function(item){  ;
 __p += '\n\t<li><a href="#" data-image-name="' +
 ((__t = ( item.name )) == null ? '' : __t) +
 '">' +
@@ -14285,9 +14295,23 @@ this["compiled"]["history/photo-stage"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class="photo-stage">\n\t<button data-action="close">Done</button>\n\t<img src="' +
+__p += '<div class="photo-stage">\n\t<div class="header">\n\t\t<span class="input-group-btn">\n\t\t\t\n\t\t<button data-action="close">Done</button>\n\t\t</span>\n\t\t<h4>\n\t\t\t' +
+((__t = ( getLongDay(day) )) == null ? '' : __t) +
+', ' +
+((__t = ( getLongMonth(month) )) == null ? '' : __t) +
+' ' +
+((__t = ( date )) == null ? '' : __t) +
+'' +
+((__t = ( getDateSuffix(date) )) == null ? '' : __t) +
+' ' +
+((__t = ( year )) == null ? '' : __t) +
+' ' +
+((__t = ( zeroPad(hour) )) == null ? '' : __t) +
+':' +
+((__t = ( zeroPad(minute) )) == null ? '' : __t) +
+'\n\t\t</h4>\n\n\t\t\n\t</div>\n\t<div class="photo-center-stage">\n\t\t<img src="' +
 ((__t = ( getImageUrl(name) )) == null ? '' : __t) +
-'" alt="" id="photo-primary">\n</div>';
+'" alt="" id="photo-primary"/>\n\t</div>\n</div>';
 
 }
 return __p
@@ -14297,7 +14321,7 @@ this["compiled"]["layout/full-width"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<header>\n\t<nav></nav>\n</header>\n<section id="content"></section>\n<footer></footer>';
+__p += '<header>\n\t<nav></nav>\n</header>\n<section id="content"></section>\n<footer>\n\t<ul>\n\t\t<li><a href="#">One</a></li>\n\t\t<li><a href="#">Two</a></li>\n\t\t<li><a href="#">Three</a></li>\n\t</ul>\n</footer>\n';
 
 }
 return __p
@@ -14307,7 +14331,7 @@ this["compiled"]["navigation/nav-list"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<ul>\n\t<li><a href="#">Capture</a></li>\n\t<li><a href="#">History</a></li>\n</ul>';
+__p += '<ul>\n\t<li><a href="/photo/capture">Capture</a></li>\n\t<li class="dropdown">\n\t\t<a href="#">History <span></span></a>\n\t\t<ul class="dropdown-menu">\n\t\t\t<li><a href="/photo/history/grid">Grid</a></li>\n\t\t\t<li><a href="/photo/history/list">List</a></li>\n\t\t</ul>\n\t</li>\n\n</ul>';
 
 }
 return __p
@@ -14356,6 +14380,12 @@ define('src/ui/layout/PageLayout',["marionette"], function(Marionette){
 			nav : "nav",
 			content : "#content",
 			footer : "footer"
+		},
+		events : {
+			"click a" : "handleClick"
+		},
+		handleClick : function(e){
+			return false;
 		}
 	})
 
@@ -14450,41 +14480,95 @@ define('src/ui/history/PhotoListView',["./PhotoBaseView"], function(BaseView){
 
 define('src/ui/history/PhotoListLayout',["marionette"], function(Marionette){
 	return Marionette.Layout.extend({
-		template : "history/photo-layout",
+		template : "history/photo-list-layout",
 		regions : {
 			"list" : ".photo-list",
 			"image" : ".photo-image",
-		},
-		ui : {
-			"photo" : ".photo-image img"
 		},
 		events : {
 			"click .photo-list a" : "handlePhotoListClick"
 		},
 		handlePhotoListClick : function(e){
-			this.trigger("photo:click", e, this);
+			try{
+				this.trigger("photo:click", e, this);
+			}
+			catch(e){
+
+			}
+			return false;
 		}
 	})
 });
-define('src/ui/history/PhotoListController',["marionette", "backbone", "./PhotoCollection", "./PhotoListView", "./PhotoListLayout"], 
-	function(Marionette, Backbone, PhotoCollection, PhotoListView, PhotoHistoryLayout){
+define('src/ui/history/PhotoStageView',["./PhotoBaseView"], function(PhotoBaseView){
+	return PhotoBaseView.extend({
+		template : "history/photo-stage"
+	});
+});
+define('src/ui/history/PhotoListController',["marionette", "backbone", "./PhotoCollection", "./PhotoListView", "./PhotoListLayout", "./PhotoStageView", "underscore"], 
+	function(Marionette, Backbone, PhotoCollection, PhotoListView, PhotoListLayout, PhotoStageView, util){
 	return Marionette.Controller.extend({
 		constructor : function(options){
 			var self = this;
 			this.collection = new PhotoCollection();
 			this.layout = new PhotoListLayout();
 			this.listView = new PhotoListView({ collection : this.collection });
+			//this.stretchView = new StretchView();
+			this.stageView = new PhotoStageView();
+
 			this.layout.on("photo:click", this.handlePhotoClick.bind(this));
 			this.layout.on("render", function(){
 				self.layout.list.show(self.listView);
+				if(self.stageView.model){
+					self.layout.image.show(self.stageView);
+				}
+			});
+			this.listView.on("render", function(){
+				self.listView.$el.css("height", "0px");
+
+				util.delay(function(){
+					var value = self.listView.$el.parent().css("height");
+					self.listView.$el.css("height", value);
+				}, 100);
+				
 			});
 			this.layout.once("render", function(){
 				self.collection.fetch();
 			})
-			this.collection.on('sync', this.layout.render);
+			this.collection.on('sync', function(){
+				self.stageView.model = self.collection.first();
+				self.layout.render();
+			});
 		},
 		handlePhotoClick : function(e){
-			this.layout.ui.photo.attr("src", "/images/camera/photo/" + e.target.getAttribute("data-image-name"));
+			var target = e.currentTarget;
+			var name = target.getAttribute('data-image-name');
+			this.trigger("list:item:click", e, name);
+		},
+		displayImage : function(name){
+			this.trigger("show", this.layout);
+			var model = this.collection.findByName(name);
+			if(model){
+				this.stageView.model = model;
+				this.layout.image.show(this.stageView);
+			}
+			else{
+				var self = this;
+				this.collection.on("sync", function(){
+					var model = self.collection.findByName(name);
+					self.stageView.model = model;
+					self.layout.image.show(self.stageView);
+				})
+			}
+		},
+		routeList : function(){
+			this.trigger("show", this.layout);
+			if(this.stageView.model){
+				this.layout.image.show(this.stageView);
+			}
+			this.layout.delegateEvents();
+		},
+		routeListImage : function(name){
+			this.displayImage(name);
 		}
 	});
 });
@@ -14513,11 +14597,6 @@ define('src/ui/history/PhotoGridLayout',["marionette"], function(Marionette){
 		}
 	})
 });
-define('src/ui/history/PhotoStageView',["./PhotoBaseView"], function(PhotoBaseView){
-	return PhotoBaseView.extend({
-		template : "history/photo-stage"
-	});
-});
 define('src/ui/history/PhotoGridController',["marionette", "backbone", "src/ui/history/PhotoCollection", "src/ui/history/PhotoGridView", "src/ui/history/PhotoGridLayout", "src/ui/history/PhotoStageView"], 
 	function(Marionette, Backbone, PhotoCollection, PhotoGridView, PhotoGridLayout, PhotoStageView){
 
@@ -14542,7 +14621,18 @@ define('src/ui/history/PhotoGridController',["marionette", "backbone", "src/ui/h
 			this.trigger("grid:stage:close", e);
 		},
 		displayGrid : function(){
+			this.trigger("show", this.layout);
+			this.layout.delegateEvents();
 			this.layout.content.show(this.gridView);
+			/*
+			if(this.gridRendered && this.layout.content.$el){
+				this.layout.content.open(this.gridView);
+			}
+			else{
+				this.layout.content.show(this.gridView);
+				this.gridRendered = true;
+			}
+			*/
 		},
 		displayImage : function(name){
 			var image = this.collection.findByName(name);
@@ -14571,22 +14661,138 @@ define('src/ui/history/PhotoGridRouter',["marionette"], function(Marionette){
 		}
 	});
 });
-define('src/ui/navigation/NavView',["marionette"], function(Marionette){
-	return Marionette.ItemView.extend({
-		template : "navigation/nav-list"
+define('src/ui/history/PhotoListRouter',["marionette"], function(Marionette){
+	return Marionette.AppRouter.extend({
+		appRoutes : {
+			"photo/history/list" : "routeList",
+			"photo/history/list/:name" : "routeListImage"
+		}
 	})
 });
-define('src/ui/navigation/main',["src/ui/layout/main", "./NavView"], function(layout, NavView){
+define('src/ui/navigation/NavView',["marionette", "jquery"], function(Marionette, dom){
+	return Marionette.ItemView.extend({
+		template : "navigation/nav-list",
+		constructor : function(options){
+			Marionette.ItemView.prototype.constructor.apply(this, arguments);
+			//dom("body").on("click")
+		},
+		events : {
+			"click a" : "handleClick"
+		},
+		handleClick : function(e){
+			var target = e.currentTarget;
+			var url = target.getAttribute("href");
+			if(url.indexOf("#") == 0){
+				return false;
+			}
+			this.trigger("navigate", e, url);
 
-	var view = new NavView();
-
-	layout.nav.show(view);
-
-	return view;
-	
+		}
+	})
 });
-define('src/ui/history/main',["app", "src/ui/layout/main", "marionette", "./PhotoListController", "./PhotoGridController", "./PhotoGridRouter"], 
-	function(app, primaryLayout, Marionette, PhotoListController, PhotoGridController, PhotoGridRouter){
+define('src/ui/navigation/NavRouter',["backbone"], function(Backbone){
+	return Backbone.Router.extend({
+
+	})
+});
+define('src/ui/navigation/NavigationController',["marionette", "./NavView", "./NavRouter"], function(Marionette, NavView, NavRouter){
+	return Marionette.Controller.extend({
+		constructor : function(){
+
+			this.view = new NavView();
+			this.router = new NavRouter();
+
+			this.view.on("navigate", this.handleNavigate.bind(this));
+
+		},
+		handleNavigate : function(e, url){
+			this.router.navigate(url, { trigger : true });
+		}
+	})
+});
+define('src/ui/navigation/main',["app", "src/ui/layout/main", "marionette", "./NavView", "./NavRouter", "./NavigationController"], 
+	function(app, layout, Marionette, NavView, NavRouter, NavigationController){
+
+	return app.module("navigation", function(nav){
+		nav.addInitializer(function(){
+			nav.controller = new NavigationController();
+			layout.nav.show(nav.controller.view);
+		});
+	});
+
+});
+define('src/ui/capture/CaptureLayout',["marionette"], function(Marionette){
+	return Marionette.Layout.extend({
+		template : "capture/capture-layout",
+		events : {
+			"submit" : "handleSubmit"
+		},
+		regions : {
+			"stage" : ".photo-stage"
+		},
+		handleSubmit : function(e){
+			try{
+				this.trigger("submit", e);
+			}
+			catch(e){
+
+			}
+			return false;
+		}
+	})
+});
+define('src/ui/capture/CaptureController',["marionette", "./CaptureLayout", "jquery", "src/ui/history/PhotoModel", "src/ui/history/PhotoStageView"], 
+	function(Marionette, CaptureLayout, jQuery, PhotoModel, StageView){
+
+	return Marionette.Controller.extend({
+		constructor : function(options){
+			Marionette.Controller.prototype.constructor.apply(this, arguments);
+			this.layout = new CaptureLayout();
+			
+			this.stageModel = new PhotoModel({
+				url : "/capture"
+			});
+			this.stageView = new StageView({ model : this.stageModel });
+			this.layout.on("submit", this.handleSubmit.bind(this));
+			this.stageModel.on("sync", this.stageModel.render);
+		},
+		handleSubmit : function(e){
+			var self = this;
+			this.stageModel.sync(function(){
+				self.layout.stage.show(self.stageView);
+			});
+		},
+		routeCapture : function(){
+			this.trigger("show", this.layout);
+		}
+	})
+
+
+});
+define('src/ui/capture/CaptureRouter',["marionette"], function(Marionette){
+	return Marionette.AppRouter.extend({
+		appRoutes : {
+			"photo/capture" : "routeCapture"
+		}
+	})
+});
+define('src/ui/capture/main',["app", "src/ui/layout/main", "./CaptureController", "./CaptureRouter"], function(app, superLayout, CaptureController, CaptureRouter){
+
+	return app.module('capture', function(capture){
+		capture.addInitializer(function(){
+			var controller = new CaptureController();
+			var router = new CaptureRouter({ controller : controller });
+			controller.on("show", function(layout){
+				superLayout.content.show(layout);
+			})
+		})
+	});
+
+
+
+});
+define('src/ui/history/main',["app", "src/ui/layout/main", "marionette", "./PhotoListController", "./PhotoGridController", "./PhotoGridRouter", "./PhotoListRouter"], 
+	function(app, primaryLayout, Marionette, PhotoListController, PhotoGridController, PhotoGridRouter, PhotoListRouter){
 	
 	return app.module('PhotoHistory', function(module){
 		// module.on('start', function(){
@@ -14598,20 +14804,40 @@ define('src/ui/history/main',["app", "src/ui/layout/main", "marionette", "./Phot
 		module.on('start', function(){
 			var controller = new PhotoGridController();
 			var router = new PhotoGridRouter({ controller : controller });
+			var listController = new PhotoListController();
+			var listRouter = new PhotoListRouter({ controller : listController });
+			var opts = { trigger : true };
+			var currentLayout = false;
 			primaryLayout.content.show(controller.layout);
 			controller.on('grid:item:click', function(e, name){
-				router.navigate('photo/history/grid/' + name, { trigger : true});
+				router.navigate('photo/history/grid/' + name, opts);
 			});
 
 			controller.on("grid:stage:close", function(e){
-				router.navigate('photo/history/grid', { trigger : true });
+				router.navigate('photo/history/grid', opts);
 			});
 
+			listController.on("list:item:click", function(e, name){
+				router.navigate('photo/history/list/'+ name, opts);
+			})
+
+			controller.on("show", handleShowLayout);
+			listController.on("show", handleShowLayout);
+
+			function handleShowLayout(layout){
+				if(currentLayout == layout){
+					return false;
+				}
+				else{
+					primaryLayout.content.show(layout);
+					currentLayout = layout;
+				}
+			}
 		})
 	});
 
 });
-require(['app', 'backbone', 'src/ui/history/main', 'src/ui/navigation/main'], function(app, Backbone){
+require(['app', 'backbone', 'src/ui/history/main', 'src/ui/navigation/main', 'src/ui/capture/main'], function(app, Backbone){
 	app.start();
 	setTimeout(function(){
 

@@ -1,0 +1,11 @@
+<div class="photo-grid">
+	<% _.each(items, function(item){ %>
+	<div class="photo-grid-item" data-photo-name="<%= item.name %>">
+		<div>
+			<img src="<%= getImageUrl(item.name) %>"/>
+			<h4><%= item.date + 1 %>/<%= item.month + 1 %>/<%= item.year %> <%= getMeridianHour(item.hour) %>:<%= zeroPad(item.minute) %>:<%= zeroPad(item.second) %> <%= getMeridianIcon(item.hour) %></h4>
+		</div>
+		
+	</div>
+	<% }); %>
+</div>

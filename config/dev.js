@@ -7,7 +7,8 @@ require.config({
             "backbone.wreqr" : "vendor/backbone.wreqr/lib/amd/backbone.wreqr",
             "backbone.babysitter" : "vendor/backbone.babysitter/lib/amd/backbone.babysitter",
             "app" : "src/ui/app",
-            "template" : "src/ui/template/compile"
+            "template" : "src/ui/template/compile",
+            "window" : "src/ui/layout/window-proxy"
             //"require" : "vendor/requirejs/require"
           },
           shim : {
