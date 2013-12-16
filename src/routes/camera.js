@@ -28,7 +28,9 @@ exports.photoHistoryList = function(request, response){
 	var ret = [];
 	fs.readdir(cameraFilePath, function(err, files){
 		files.forEach(function(file){
-			ret.push({ name : file });
+			if(file.search(/\.jpg$/) > -1){
+				ret.push({ name : file });
+			}
 		})
 
     //response.writeHead(200, { 'Content-Type': 'application/json' });
