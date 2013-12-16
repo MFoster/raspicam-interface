@@ -14758,7 +14758,7 @@ define('src/ui/capture/CaptureController',["marionette", "./CaptureLayout", "jqu
 		},
 		handleSubmit : function(e){
 			var self = this;
-			this.stageModel.sync(function(){
+			this.stageModel.fetch(function(){
 				self.layout.stage.show(self.stageView);
 			});
 		},

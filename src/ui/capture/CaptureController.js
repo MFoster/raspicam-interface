@@ -15,7 +15,7 @@ define(["marionette", "./CaptureLayout", "jquery", "src/ui/history/PhotoModel", 
 		},
 		handleSubmit : function(e){
 			var self = this;
-			this.stageModel.sync(function(){
+			this.stageModel.fetch(function(){
 				self.layout.stage.show(self.stageView);
 			});
 		},
