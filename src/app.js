@@ -31,7 +31,7 @@ if ('development' == app.get('env')) {
 
 //app.get('/', routes.index);
 app.get('/users', user.list);
-app.get('/photo/capture', camera.photo);
+app.get('/capture', camera.photo);
 //app.get('/photo/history', camera.photoHistory);
 app.get('/', camera.photoHistory);
 app.get('/photo/history/list', camera.photoHistoryList);
