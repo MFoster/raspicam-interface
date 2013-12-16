@@ -146,7 +146,7 @@ this["compiled"]["navigation/nav-list"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<ul>\n\t<li><a href="/photo/capture">Capture</a></li>\n\t<li class="dropdown">\n\t\t<a href="#">History <span></span></a>\n\t\t<ul class="dropdown-menu">\n\t\t\t<li><a href="/photo/history/grid">Grid</a></li>\n\t\t\t<li><a href="/photo/history/list">List</a></li>\n\t\t</ul>\n\t</li>\n\n</ul>';
+__p += '<ul>\n\t<li><a href="/">Home</a></li>\n\t<li><a href="/photo/capture">Capture</a></li>\n\t<li class="dropdown">\n\t\t<a href="/photo/history">History <span></span></a>\n\t\t<ul class="dropdown-menu">\n\t\t\t<li><a href="/photo/history/grid">Grid</a></li>\n\t\t\t<li><a href="/photo/history/list">List</a></li>\n\t\t</ul>\n\t</li>\n\n</ul>';
 
 }
 return __p
