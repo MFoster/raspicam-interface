@@ -1,9 +1,9 @@
-define(["marionette", "backbone", "src/ui/history/PhotoCollection", "src/ui/history/PhotoGridView", "src/ui/history/PhotoGridLayout", "src/ui/history/PhotoStageView"], 
-	function(Marionette, Backbone, PhotoCollection, PhotoGridView, PhotoGridLayout, PhotoStageView){
+define(["marionette", "backbone", "src/ui/history/PhotoGridView", "src/ui/history/PhotoGridLayout", "src/ui/layout/PhotoStageView"], 
+	function(Marionette, Backbone, PhotoGridView, PhotoGridLayout, PhotoStageView){
 
 	return Marionette.Controller.extend({
 		constructor : function(options){
-			this.collection = new PhotoCollection();
+			this.collection = options.collection
 			this.gridView = new PhotoGridView({ collection : this.collection });
 			this.layout = new PhotoGridLayout();
 			this.stageView = new PhotoStageView();

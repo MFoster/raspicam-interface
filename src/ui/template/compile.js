@@ -12,6 +12,16 @@ __p += '<div class="raspicam-interface-photo">\n\t<div class="panel panel-defaul
 return __p
 };
 
+this["compiled"]["core/photo-recent-layout"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<div class="photo-recent-layout">\n\t<h2>Latest Capture</h2>\n\t<div class="photo-stage"></div>\n</div>';
+
+}
+return __p
+};
+
 this["compiled"]["history/photo-grid-layout"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;

@@ -1,4 +1,4 @@
-define(["./PhotoBaseView"], function(BaseView){
+define(["src/ui/layout/PhotoBaseView"], function(BaseView){
 
 	return BaseView.extend({
 		template : "history/photo-list"

@@ -1,4 +1,4 @@
-define(["marionette", "./CaptureLayout", "jquery", "src/ui/history/PhotoModel", "src/ui/history/PhotoStageView"], 
+define(["marionette", "./CaptureLayout", "jquery", "src/ui/core/PhotoModel", "src/ui/layout/PhotoStageView"], 
 	function(Marionette, CaptureLayout, jQuery, PhotoModel, StageView){
 
 	return Marionette.Controller.extend({
@@ -16,6 +16,7 @@ define(["marionette", "./CaptureLayout", "jquery", "src/ui/history/PhotoModel", 
 			var self = this;
 			this.stageModel.fetch({ success : function(){
 				self.layout.stage.show(self.stageView);
+				self.trigger("capture", self.stageModel.clone());
 			}});
 		},
 		routeCapture : function(){

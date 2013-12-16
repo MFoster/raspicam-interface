@@ -8,10 +8,10 @@ define(["app", "src/ui/layout/main", "marionette", "./PhotoListController", "./P
 		// 	this.controller = controller;
 		// 	controller.start();
 		// });
-		module.on('start', function(){
-			var controller = new PhotoGridController();
+		module.on('start', function(config){
+			var controller = new PhotoGridController(config);
 			var router = new PhotoGridRouter({ controller : controller });
-			var listController = new PhotoListController();
+			var listController = new PhotoListController(config);
 			var listRouter = new PhotoListRouter({ controller : listController });
 			var opts = { trigger : true };
 			var currentLayout = false;
@@ -44,11 +44,15 @@ define(["app", "src/ui/layout/main", "marionette", "./PhotoListController", "./P
 	});
 
 });
-require(['app', 'backbone', 'src/ui/history/main', 'src/ui/navigation/main', 'src/ui/capture/main'], function(app, Backbone){
-	app.start();
-	setTimeout(function(){
+require(['app', 'backbone', 'src/ui/core/main', 'src/ui/history/main', 'src/ui/navigation/main', 'src/ui/capture/main'], 
+	function(app, Backbone, core, history, navigation, capture){
+	app.start({ collection : core.collection });
 
-		Backbone.history.start();
+	capture.on("capture", function(model){
+		core.collection.unshift(model);
+	})
 
-	}, 5000)
+	core.collection.once("sync", function(){
+		Backbone.history.start({ pushState : true });
+	})
 })

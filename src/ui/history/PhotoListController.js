@@ -1,9 +1,9 @@
-define(["marionette", "backbone", "./PhotoCollection", "./PhotoListView", "./PhotoListLayout", "./PhotoStageView", "underscore"], 
-	function(Marionette, Backbone, PhotoCollection, PhotoListView, PhotoListLayout, PhotoStageView, util){
+define(["marionette", "backbone", "./PhotoListView", "./PhotoListLayout", "src/ui/layout/PhotoStageView", "underscore"], 
+	function(Marionette, Backbone, PhotoListView, PhotoListLayout, PhotoStageView, util){
 	return Marionette.Controller.extend({
 		constructor : function(options){
 			var self = this;
-			this.collection = new PhotoCollection();
+			this.collection = options.collection;
 			this.layout = new PhotoListLayout();
 			this.listView = new PhotoListView({ collection : this.collection });
 			//this.stretchView = new StretchView();

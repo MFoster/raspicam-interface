@@ -6667,8 +6667,13 @@ li.dropdown:hover .dropdown-menu {
   float: left;
 }
 .photo-image .photo-stage button,
-.panel .photo-stage button {
+.panel .photo-stage button,
+.photo-recent-layout .photo-stage button {
   display: none;
+}
+.photo-stage img {
+  display: block;
+  margin: auto;
 }
 .container .raspicam-interface-photo {
   float: none;

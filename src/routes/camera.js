@@ -29,7 +29,7 @@ exports.photoHistoryList = function(request, response){
 	fs.readdir(cameraFilePath, function(err, files){
 		files.forEach(function(file){
 			if(file.search(/\.jpg$/) > -1){
-				ret.push({ name : file });
+				ret.unshift({ name : file });
 			}
 		})
 

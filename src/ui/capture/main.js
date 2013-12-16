@@ -6,10 +6,10 @@ define(["app", "src/ui/layout/main", "./CaptureController", "./CaptureRouter"], 
 			var router = new CaptureRouter({ controller : controller });
 			controller.on("show", function(layout){
 				superLayout.content.show(layout);
-			})
+			});
+			controller.on("capture", function(e){
+				capture.trigger("capture", e);
+			});
 		})
 	});
-
-
-
 })
