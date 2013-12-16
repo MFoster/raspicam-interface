@@ -20,6 +20,7 @@ define(["marionette", "./CaptureLayout", "jquery", "src/ui/history/PhotoModel", 
 		},
 		routeCapture : function(){
 			this.trigger("show", this.layout);
+			this.layout.delegateEvents();
 		}
 	})
 
