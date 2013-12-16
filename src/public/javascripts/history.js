@@ -14763,6 +14763,7 @@ define('src/ui/capture/CaptureController',["marionette", "./CaptureLayout", "jqu
 		},
 		routeCapture : function(){
 			this.trigger("show", this.layout);
+			this.layout.delegateEvents();
 		}
 	})
 

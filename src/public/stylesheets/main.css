@@ -6666,7 +6666,8 @@ li.dropdown:hover .dropdown-menu {
 .photo-stage button {
   float: left;
 }
-.photo-image .photo-stage button {
+.photo-image .photo-stage button,
+.panel .photo-stage button {
   display: none;
 }
 .container .raspicam-interface-photo {
