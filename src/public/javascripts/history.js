@@ -14239,7 +14239,7 @@ __p += '\n\t<div class="photo-grid-item" data-photo-name="' +
 '">\n\t\t<div>\n\t\t\t<img src="' +
 ((__t = ( getImageUrl(item.name) )) == null ? '' : __t) +
 '"/>\n\t\t\t<h4>' +
-((__t = ( item.date + 1 )) == null ? '' : __t) +
+((__t = ( item.date )) == null ? '' : __t) +
 '/' +
 ((__t = ( item.month + 1 )) == null ? '' : __t) +
 '/' +
@@ -14341,7 +14341,7 @@ this["compiled"]["navigation/nav-list"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<ul>\n\t<li><a href="/">Home</a></li>\n\t<li><a href="/photo/capture">Capture</a></li>\n\t<li class="dropdown">\n\t\t<a href="/photo/history">History <span></span></a>\n\t\t<ul class="dropdown-menu">\n\t\t\t<li><a href="/photo/history/grid">Grid</a></li>\n\t\t\t<li><a href="/photo/history/list">List</a></li>\n\t\t</ul>\n\t</li>\n\n</ul>';
+__p += '<ul>\n\t<li><a href="/photo/capture">Capture</a></li>\n\t<li class="dropdown">\n\t\t<a href="/photo/history">History <span></span></a>\n\t\t<ul class="dropdown-menu">\n\t\t\t<li><a href="/photo/history/grid">Grid</a></li>\n\t\t</ul>\n\t</li>\n\n</ul>';
 
 }
 return __p
@@ -14509,9 +14509,7 @@ define('src/ui/history/PhotoListController',["marionette", "backbone", "./PhotoL
 				}, 100);
 				
 			});
-			this.layout.once("render", function(){
-				self.collection.fetch();
-			})
+
 			this.collection.on('sync', function(){
 				self.stageView.model = self.collection.first();
 				self.layout.render();
@@ -14635,14 +14633,14 @@ define('src/ui/history/PhotoGridRouter',["marionette"], function(Marionette){
 	return Marionette.AppRouter.extend({
 		appRoutes : {
 			"photo/history/grid/:name" : "routeStage",
-			"photo/history/grid" : "routeGrid",
-			"photo/history" : "routeGrid"
+			"photo/history/grid" : "routeGrid"
 		}
 	});
 });
 define('src/ui/history/PhotoListRouter',["marionette"], function(Marionette){
 	return Marionette.AppRouter.extend({
 		appRoutes : {
+			"photo/history" : "routeList",
 			"photo/history/list" : "routeList",
 			"photo/history/list/:name" : "routeListImage"
 		}
@@ -14680,56 +14678,12 @@ define('src/ui/core/PhotoCollection',["backbone", "./PhotoModel"], function(Back
 		}
 	});
 });
-define('src/ui/core/PhotoRecentLayout',["marionette"], function(Marionette){
-	return Marionette.Layout.extend({
-		template : "core/photo-recent-layout",
-		regions : {
-			"stage" : ".photo-stage"
-		}
-	});
-});
-define('src/ui/core/PhotoRecentController',["marionette", "./PhotoRecentLayout", "src/ui/layout/PhotoStageView"], 
-	function(Marionette, PhotoRecentLayout, PhotoStageView){
-	return Marionette.Controller.extend({
-		constructor : function(options){
-			Marionette.Controller.prototype.constructor.apply(this, arguments);
-			var self = this;
-			this.collection = options.collection
-			this.layout = new PhotoRecentLayout();
-			this.stage = new PhotoStageView();
-			this.layout.on("render", function(){
-				var model = self.collection.first();
-				self.stage.model = model;
-				self.layout.stage.show(self.stage);
-			});
-		},
-		routeRecent : function(){
-			this.trigger("show", this.layout);
-		}
-	});
-});
-define('src/ui/core/PhotoRecentRouter',["marionette"], function(Marionette){
-	return Marionette.AppRouter.extend({
-		appRoutes : {
-			'' : "routeRecent"
-		}
-	})
-});
-define('src/ui/core/main',["app", "src/ui/layout/main", "marionette", "./PhotoCollection", "./PhotoRecentController", "./PhotoRecentRouter"], 
+define('src/ui/core/main',["app", "src/ui/layout/main", "marionette", "./PhotoCollection"], 
 	function(app, display, Marionette, PhotoCollection, PhotoRecentController, PhotoRecentRouter){
 	
 
 	return app.module("core", function(core){
 		core.collection = new PhotoCollection();
-		core.addInitializer(function(){
-			core.collection.fetch();
-		});
-
-		core.photoRecent = new PhotoRecentController({ collection : core.collection });
-		core.photoRecentRouter = new PhotoRecentRouter({ controller : core.photoRecent });
-		core.photoRecent.on("show", function(layout){
-			display.content.show(layout);
-		})
 	});
 
 
@@ -14806,19 +14760,24 @@ define('src/ui/capture/CaptureLayout',["marionette"], function(Marionette){
 		}
 	})
 });
-define('src/ui/capture/CaptureController',["marionette", "./CaptureLayout", "jquery", "src/ui/core/PhotoModel", "src/ui/layout/PhotoStageView"], 
-	function(Marionette, CaptureLayout, jQuery, PhotoModel, StageView){
+define('src/ui/capture/CaptureController',["marionette", "./CaptureLayout", "jquery", "src/ui/layout/PhotoStageView"], 
+	function(Marionette, CaptureLayout, jQuery, StageView){
 
 	return Marionette.Controller.extend({
 		constructor : function(options){
 			Marionette.Controller.prototype.constructor.apply(this, arguments);
 			this.layout = new CaptureLayout();
-			
-			this.stageModel = new PhotoModel();
+			this.stageModel = options.collection.first();
 			this.stageModel.url = "/capture";
 			this.stageView = new StageView({ model : this.stageModel });
 			this.layout.on("submit", this.handleSubmit.bind(this));
-			this.stageModel.on("sync", this.stageModel.render);
+			this.layout.on("render", this.handleLayoutRender.bind(this));
+			this.stageModel.on("change", this.stageView.render);
+		},
+		handleLayoutRender : function(layout){
+			if(this.stageView.model){
+				this.layout.stage.show(this.stageView);
+			}
 		},
 		handleSubmit : function(e){
 			var self = this;
@@ -14838,15 +14797,16 @@ define('src/ui/capture/CaptureController',["marionette", "./CaptureLayout", "jqu
 define('src/ui/capture/CaptureRouter',["marionette"], function(Marionette){
 	return Marionette.AppRouter.extend({
 		appRoutes : {
-			"photo/capture" : "routeCapture"
+			"photo/capture" : "routeCapture",
+			"" : "routeCapture"
 		}
 	})
 });
 define('src/ui/capture/main',["app", "src/ui/layout/main", "./CaptureController", "./CaptureRouter"], function(app, superLayout, CaptureController, CaptureRouter){
 
 	return app.module('capture', function(capture){
-		capture.addInitializer(function(){
-			var controller = new CaptureController();
+		capture.addInitializer(function(config){
+			var controller = new CaptureController(config);
 			var router = new CaptureRouter({ controller : controller });
 			controller.on("show", function(layout){
 				superLayout.content.show(layout);
@@ -14905,13 +14865,14 @@ define('src/ui/history/main',["app", "src/ui/layout/main", "marionette", "./Phot
 });
 require(['app', 'backbone', 'src/ui/core/main', 'src/ui/history/main', 'src/ui/navigation/main', 'src/ui/capture/main'], 
 	function(app, Backbone, core, history, navigation, capture){
-	app.start({ collection : core.collection });
-
+	
 	capture.on("capture", function(model){
 		core.collection.unshift(model);
 	})
 
-	core.collection.once("sync", function(){
+	core.collection.fetch({ success : function(){
+		app.start({ collection : core.collection});
 		Backbone.history.start({ pushState : true });
-	})
+	}});
+
 });

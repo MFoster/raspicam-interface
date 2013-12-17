@@ -46,13 +46,14 @@ define(["app", "src/ui/layout/main", "marionette", "./PhotoListController", "./P
 });
 require(['app', 'backbone', 'src/ui/core/main', 'src/ui/history/main', 'src/ui/navigation/main', 'src/ui/capture/main'], 
 	function(app, Backbone, core, history, navigation, capture){
-	app.start({ collection : core.collection });
-
+	
 	capture.on("capture", function(model){
 		core.collection.unshift(model);
 	})
 
-	core.collection.once("sync", function(){
+	core.collection.fetch({ success : function(){
+		app.start({ collection : core.collection});
 		Backbone.history.start({ pushState : true });
-	})
+	}});
+
 })

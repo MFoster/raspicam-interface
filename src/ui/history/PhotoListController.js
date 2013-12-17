@@ -25,9 +25,7 @@ define(["marionette", "backbone", "./PhotoListView", "./PhotoListLayout", "src/u
 				}, 100);
 				
 			});
-			this.layout.once("render", function(){
-				self.collection.fetch();
-			})
+
 			this.collection.on('sync', function(){
 				self.stageView.model = self.collection.first();
 				self.layout.render();
