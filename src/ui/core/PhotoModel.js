@@ -15,6 +15,7 @@ define(["backbone"], function(Backbone){
 				minute : date.getMinutes(),
 				second : date.getSeconds(),
 				millisecond : date.getMilliseconds(),
+				time : date.getTime(),
 				ext : ext,
 				name : response.name
 			};

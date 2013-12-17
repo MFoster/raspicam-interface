@@ -22,18 +22,12 @@ define(["marionette", "backbone", "src/ui/history/PhotoGridView", "src/ui/histor
 			this.trigger("grid:stage:close", e);
 		},
 		displayGrid : function(){
+			var self = this;
+			this.layout.once("render", function(){
+				self.layout.content.show(self.gridView);
+				self.layout.delegateEvents();
+			});
 			this.trigger("show", this.layout);
-			this.layout.delegateEvents();
-			this.layout.content.show(this.gridView);
-			/*
-			if(this.gridRendered && this.layout.content.$el){
-				this.layout.content.open(this.gridView);
-			}
-			else{
-				this.layout.content.show(this.gridView);
-				this.gridRendered = true;
-			}
-			*/
 		},
 		displayImage : function(name){
 			var image = this.collection.findByName(name);

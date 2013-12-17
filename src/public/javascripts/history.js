@@ -14489,7 +14489,7 @@ define('src/ui/history/PhotoListController',["marionette", "backbone", "./PhotoL
 			var self = this;
 			this.collection = options.collection;
 			this.layout = new PhotoListLayout();
-			this.listView = new PhotoListView({ collection : this.collection });
+			this.listView = new PhotoListView({ collection : options.collection });
 			//this.stretchView = new StretchView();
 			this.stageView = new PhotoStageView();
 
@@ -14509,7 +14509,9 @@ define('src/ui/history/PhotoListController',["marionette", "backbone", "./PhotoL
 				}, 100);
 				
 			});
-
+			this.layout.once("render", function(){
+				self.collection.fetch();
+			})
 			this.collection.on('sync', function(){
 				self.stageView.model = self.collection.first();
 				self.layout.render();
@@ -14539,7 +14541,10 @@ define('src/ui/history/PhotoListController',["marionette", "backbone", "./PhotoL
 		routeList : function(){
 			this.trigger("show", this.layout);
 			if(this.stageView.model){
-				this.layout.image.show(this.stageView);
+				var self = this;
+				this.layout.once("render", function(){
+					self.layout.image.show(self.stageView);
+				});
 			}
 			this.layout.delegateEvents();
 		},
@@ -14597,18 +14602,12 @@ define('src/ui/history/PhotoGridController',["marionette", "backbone", "src/ui/h
 			this.trigger("grid:stage:close", e);
 		},
 		displayGrid : function(){
+			var self = this;
+			this.layout.once("render", function(){
+				self.layout.content.show(self.gridView);
+				self.layout.delegateEvents();
+			});
 			this.trigger("show", this.layout);
-			this.layout.delegateEvents();
-			this.layout.content.show(this.gridView);
-			/*
-			if(this.gridRendered && this.layout.content.$el){
-				this.layout.content.open(this.gridView);
-			}
-			else{
-				this.layout.content.show(this.gridView);
-				this.gridRendered = true;
-			}
-			*/
 		},
 		displayImage : function(name){
 			var image = this.collection.findByName(name);
@@ -14663,6 +14662,7 @@ define('src/ui/core/PhotoModel',["backbone"], function(Backbone){
 				minute : date.getMinutes(),
 				second : date.getSeconds(),
 				millisecond : date.getMilliseconds(),
+				time : date.getTime(),
 				ext : ext,
 				name : response.name
 			};
@@ -14673,6 +14673,9 @@ define('src/ui/core/PhotoCollection',["backbone", "./PhotoModel"], function(Back
 	return Backbone.Collection.extend({
 		url : "/photo/history/list",
 		model : PhotoModel,
+		comparator : function(alpha, bravo){
+			return (alpha.get("time") > bravo.get("time") ? -1 : 1);
+		},
 		findByName : function(name){
 			return this.find(function(model){ return name === model.get('name'); });
 		}
@@ -14851,13 +14854,7 @@ define('src/ui/history/main',["app", "src/ui/layout/main", "marionette", "./Phot
 			listController.on("show", handleShowLayout);
 
 			function handleShowLayout(layout){
-				if(currentLayout == layout){
-					return false;
-				}
-				else{
-					primaryLayout.content.show(layout);
-					currentLayout = layout;
-				}
+				primaryLayout.content.show(layout);
 			}
 		})
 	});
@@ -14872,7 +14869,7 @@ require(['app', 'backbone', 'src/ui/core/main', 'src/ui/history/main', 'src/ui/n
 
 	core.collection.fetch({ success : function(){
 		app.start({ collection : core.collection});
-		Backbone.history.start({ pushState : true });
+		Backbone.history.start({ });
 	}});
 
 });

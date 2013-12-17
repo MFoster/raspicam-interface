@@ -5,7 +5,7 @@ define(["marionette", "backbone", "./PhotoListView", "./PhotoListLayout", "src/u
 			var self = this;
 			this.collection = options.collection;
 			this.layout = new PhotoListLayout();
-			this.listView = new PhotoListView({ collection : this.collection });
+			this.listView = new PhotoListView({ collection : options.collection });
 			//this.stretchView = new StretchView();
 			this.stageView = new PhotoStageView();
 
@@ -25,7 +25,9 @@ define(["marionette", "backbone", "./PhotoListView", "./PhotoListLayout", "src/u
 				}, 100);
 				
 			});
-
+			this.layout.once("render", function(){
+				self.collection.fetch();
+			})
 			this.collection.on('sync', function(){
 				self.stageView.model = self.collection.first();
 				self.layout.render();
@@ -55,7 +57,10 @@ define(["marionette", "backbone", "./PhotoListView", "./PhotoListLayout", "src/u
 		routeList : function(){
 			this.trigger("show", this.layout);
 			if(this.stageView.model){
-				this.layout.image.show(this.stageView);
+				var self = this;
+				this.layout.once("render", function(){
+					self.layout.image.show(self.stageView);
+				});
 			}
 			this.layout.delegateEvents();
 		},

@@ -6674,6 +6674,7 @@ li.dropdown:hover .dropdown-menu {
 .photo-stage img {
   display: block;
   margin: auto;
+  width: 100%;
 }
 .container .raspicam-interface-photo {
   float: none;

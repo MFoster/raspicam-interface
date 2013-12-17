@@ -32,13 +32,7 @@ define(["app", "src/ui/layout/main", "marionette", "./PhotoListController", "./P
 			listController.on("show", handleShowLayout);
 
 			function handleShowLayout(layout){
-				if(currentLayout == layout){
-					return false;
-				}
-				else{
-					primaryLayout.content.show(layout);
-					currentLayout = layout;
-				}
+				primaryLayout.content.show(layout);
 			}
 		})
 	});
@@ -53,7 +47,7 @@ require(['app', 'backbone', 'src/ui/core/main', 'src/ui/history/main', 'src/ui/n
 
 	core.collection.fetch({ success : function(){
 		app.start({ collection : core.collection});
-		Backbone.history.start({ pushState : true });
+		Backbone.history.start({ });
 	}});
 
 })
