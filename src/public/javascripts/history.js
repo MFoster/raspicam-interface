@@ -14221,7 +14221,7 @@ this["compiled"]["history/photo-grid-layout"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class="photo-grid-layout">\n\t<div class="photo-content"></div>\n</div>';
+__p += '<div class="photo-grid-layout">\n\t<div class="pager-container"></div>\n\t<div class="photo-content"></div>\n</div>';
 
 }
 return __p
@@ -14331,7 +14331,30 @@ this["compiled"]["layout/full-width"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<header>\n\t<nav></nav>\n</header>\n<section id="content"></section>\n<footer>\n\t<ul>\n\t\t<li><a href="#">One</a></li>\n\t\t<li><a href="#">Two</a></li>\n\t\t<li><a href="#">Three</a></li>\n\t</ul>\n</footer>\n';
+__p += '<header>\n\t<nav></nav>\n</header>\n<section id="content"></section>\n<footer>\n\t<ul>\n\t\t<li><a href="http://www.raspberrypi.org/camera">Raspberry Pi Camera</a></li>\n\t\t<li><a href="https://github.com/troyth/node-raspicam">Raspicam</a></li>\n\t\t<li><a href="https://github.com/MFoster/raspicam-interface">Raspicam Interface</a></li>\n\t</ul>\n</footer>\n';
+
+}
+return __p
+};
+
+this["compiled"]["layout/pager"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+__p += '<ul class="pagination">\n\t<li><a href="#" data-num="prev">&laquo;</a></li>\n\t';
+ _.each(items, function(item){ ;
+__p += '\n\t<li ';
+ if(item.active){ ;
+__p += 'class="active"';
+ } ;
+__p += '><a href="#" data-num="' +
+((__t = ( item.num )) == null ? '' : __t) +
+'">' +
+((__t = ( item.num + 1 )) == null ? '' : __t) +
+'</a></li>\n\t';
+ }) ;
+__p += '\n\t<li><a href="#" data-num="next">&raquo;</a></li>\n</ul>';
 
 }
 return __p
@@ -14395,7 +14418,9 @@ define('src/ui/layout/PageLayout',["marionette"], function(Marionette){
 			"click a" : "handleClick"
 		},
 		handleClick : function(e){
-			return false;
+			if(e.currentTarget.getAttribute("href").search(/^http/i) == -1){
+				return false;
+			}
 		}
 	})
 
@@ -14482,8 +14507,8 @@ define('src/ui/layout/PhotoStageView',["./PhotoBaseView"], function(PhotoBaseVie
 		template : "history/photo-stage"
 	});
 });
-define('src/ui/history/PhotoListController',["marionette", "backbone", "./PhotoListView", "./PhotoListLayout", "src/ui/layout/PhotoStageView", "underscore"], 
-	function(Marionette, Backbone, PhotoListView, PhotoListLayout, PhotoStageView, util){
+define('src/ui/history/PhotoListController',["marionette", "backbone", "./PhotoListView", "./PhotoListLayout", "src/ui/layout/PhotoStageView", "underscore", "jquery"], 
+	function(Marionette, Backbone, PhotoListView, PhotoListLayout, PhotoStageView, util, dom){
 	return Marionette.Controller.extend({
 		constructor : function(options){
 			var self = this;
@@ -14506,7 +14531,7 @@ define('src/ui/history/PhotoListController',["marionette", "backbone", "./PhotoL
 				util.delay(function(){
 					var value = self.listView.$el.parent().css("height");
 					self.listView.$el.css("height", value);
-				}, 100);
+				}, 200);
 				
 			});
 			this.layout.once("render", function(){
@@ -14520,10 +14545,14 @@ define('src/ui/history/PhotoListController',["marionette", "backbone", "./PhotoL
 		handlePhotoClick : function(e){
 			var target = e.currentTarget;
 			var name = target.getAttribute('data-image-name');
+			this.listView.$el.find(".active").removeClass("active");
+			dom(target).parent("li").addClass("active");
 			this.trigger("list:item:click", e, name);
 		},
 		displayImage : function(name){
-			this.trigger("show", this.layout);
+			if(!this.layout.el.parentNode){
+				this.trigger("show", this.layout);
+			}
 			var model = this.collection.findByName(name);
 			if(model){
 				this.stageView.model = model;
@@ -14562,7 +14591,8 @@ define('src/ui/history/PhotoGridLayout',["marionette"], function(Marionette){
 	return Marionette.Layout.extend({
 		template : "history/photo-grid-layout",
 		regions : {
-			content : ".photo-content"
+			content : ".photo-content",
+			pager : ".pager-container"
 		},
 		events : {
 			"click .photo-grid-item" : "handleGridItemClick",
@@ -14578,20 +14608,105 @@ define('src/ui/history/PhotoGridLayout',["marionette"], function(Marionette){
 		}
 	})
 });
-define('src/ui/history/PhotoGridController',["marionette", "backbone", "src/ui/history/PhotoGridView", "src/ui/history/PhotoGridLayout", "src/ui/layout/PhotoStageView"], 
-	function(Marionette, Backbone, PhotoGridView, PhotoGridLayout, PhotoStageView){
+define('src/ui/layout/PagerView',["marionette", "backbone"], function(Marionette, Backbone){
+	return Marionette.ItemView.extend({
+		template : "layout/pager",
+		events : {
+			"click a" : "handleClick"
+		},
+		constructor : function(options){
+			Marionette.ItemView.prototype.constructor.apply(this, arguments);
+			this.size = options.size;
+			this.index = options.index;
+			this.masterCollection = options.masterCollection;
+			this.pageCollection = options.pageCollection;
+			this.collection = new Backbone.Collection(this.reduceMaster());
+			this.masterCollection.on("sync", this.handleMasterSync.bind(this));
+			var self = this;
+			this.on("render", function(){
+				self.delegateEvents();
+			})
+		},
+		handleClick : function(e){
+			var target = e.currentTarget;
+			var num = target.getAttribute("data-num");
+			if(num == "next"){
+				this.setIndex(this.index + 1);
+			}
+			else if(num == "prev"){
+				this.setIndex(this.index - 1);
+			}
+			else{
+				this.setIndex(num);
+			}
+			this.reset();
+			var self = this;
+			setTimeout(function(){
+				self.render();
+			}, 50)
+		},
+		handleMasterSync : function(response){
+			this.reset();
+		},
+		reset : function(){
+			this.pageCollection.reset(this.sliceMaster());
+			this.collection.reset(this.reduceMaster());
+		},
+		sliceMaster : function(){
+			return this.masterCollection.slice(this.index * this.size, this.index * this.size + this.size)
+		},
+		reduceMaster : function(){
+			var pages = this.getPageMax() + 1;
+			var arr = [];
+			for(var i = 0; i < pages; i++){
+				arr.push(new Backbone.Model({ num : i, active : (i === this.index)}));
+			}
+			return arr;
+		},
+		getPageMax : function(){
+			return Math.floor(this.masterCollection.size() / this.size);
+		},
+		setIndex : function(index){
+			var num = parseInt(index, 10);
+			var max = this.getPageMax();
+			if(num > max){
+				this.index = 0;
+			}
+			else if(num < 0){
+				this.index = max;
+			}
+			else{
+				this.index = num;
+			}
+			return this;
+		},
+		setSize : function(size){
+			this.size = size;
+			return this;
+		}
+
+	})
+});
+define('src/ui/history/PhotoGridController',["marionette", "backbone", "src/ui/history/PhotoGridView", "src/ui/history/PhotoGridLayout", "src/ui/layout/PhotoStageView", "src/ui/layout/PagerView"], 
+	function(Marionette, Backbone, PhotoGridView, PhotoGridLayout, PhotoStageView, PagerView){
 
 	return Marionette.Controller.extend({
 		constructor : function(options){
-			this.collection = options.collection
-			this.gridView = new PhotoGridView({ collection : this.collection });
+			this.collection = options.collection;
+			this.gridCollection = new Backbone.Collection();
+			this.gridView = new PhotoGridView({ collection : this.gridCollection });
 			this.layout = new PhotoGridLayout();
 			this.stageView = new PhotoStageView();
+			this.pager = new PagerView({ masterCollection : options.collection, 
+																	pageCollection : this.gridCollection, 
+																	size : 9, 
+																	index : 0 });
+
 			var self = this;
 			this.layout.once("render", function(){
 				self.collection.fetch();
 			});
-			this.collection.on("sync", this.gridView.render);
+			this.gridCollection.on("reset", this.gridView.render);
 			this.layout.on("grid:item:click", this.handleGridClick.bind(this));
 			this.layout.on("grid:stage:close", this.handleStageClose.bind(this));
 		},
@@ -14605,6 +14720,7 @@ define('src/ui/history/PhotoGridController',["marionette", "backbone", "src/ui/h
 			var self = this;
 			this.layout.once("render", function(){
 				self.layout.content.show(self.gridView);
+				self.layout.pager.show(self.pager);
 				self.layout.delegateEvents();
 			});
 			this.trigger("show", this.layout);
@@ -14613,6 +14729,7 @@ define('src/ui/history/PhotoGridController',["marionette", "backbone", "src/ui/h
 			var image = this.collection.findByName(name);
 			this.stageView.model = image;
 			this.layout.content.show(this.stageView);
+			this.layout.pager.close();
 		},
 		manageLayout : function(){
 			this.displayGrid();

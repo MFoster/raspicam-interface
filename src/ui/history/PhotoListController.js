@@ -1,5 +1,5 @@
-define(["marionette", "backbone", "./PhotoListView", "./PhotoListLayout", "src/ui/layout/PhotoStageView", "underscore"], 
-	function(Marionette, Backbone, PhotoListView, PhotoListLayout, PhotoStageView, util){
+define(["marionette", "backbone", "./PhotoListView", "./PhotoListLayout", "src/ui/layout/PhotoStageView", "underscore", "jquery"], 
+	function(Marionette, Backbone, PhotoListView, PhotoListLayout, PhotoStageView, util, dom){
 	return Marionette.Controller.extend({
 		constructor : function(options){
 			var self = this;
@@ -22,7 +22,7 @@ define(["marionette", "backbone", "./PhotoListView", "./PhotoListLayout", "src/u
 				util.delay(function(){
 					var value = self.listView.$el.parent().css("height");
 					self.listView.$el.css("height", value);
-				}, 100);
+				}, 200);
 				
 			});
 			this.layout.once("render", function(){
@@ -36,10 +36,14 @@ define(["marionette", "backbone", "./PhotoListView", "./PhotoListLayout", "src/u
 		handlePhotoClick : function(e){
 			var target = e.currentTarget;
 			var name = target.getAttribute('data-image-name');
+			this.listView.$el.find(".active").removeClass("active");
+			dom(target).parent("li").addClass("active");
 			this.trigger("list:item:click", e, name);
 		},
 		displayImage : function(name){
-			this.trigger("show", this.layout);
+			if(!this.layout.el.parentNode){
+				this.trigger("show", this.layout);
+			}
 			var model = this.collection.findByName(name);
 			if(model){
 				this.stageView.model = model;

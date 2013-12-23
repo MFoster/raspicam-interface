@@ -26,7 +26,7 @@ this["compiled"]["history/photo-grid-layout"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class="photo-grid-layout">\n\t<div class="photo-content"></div>\n</div>';
+__p += '<div class="photo-grid-layout">\n\t<div class="pager-container"></div>\n\t<div class="photo-content"></div>\n</div>';
 
 }
 return __p
@@ -136,7 +136,30 @@ this["compiled"]["layout/full-width"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<header>\n\t<nav></nav>\n</header>\n<section id="content"></section>\n<footer>\n\t<ul>\n\t\t<li><a href="#">One</a></li>\n\t\t<li><a href="#">Two</a></li>\n\t\t<li><a href="#">Three</a></li>\n\t</ul>\n</footer>\n';
+__p += '<header>\n\t<nav></nav>\n</header>\n<section id="content"></section>\n<footer>\n\t<ul>\n\t\t<li><a href="http://www.raspberrypi.org/camera">Raspberry Pi Camera</a></li>\n\t\t<li><a href="https://github.com/troyth/node-raspicam">Raspicam</a></li>\n\t\t<li><a href="https://github.com/MFoster/raspicam-interface">Raspicam Interface</a></li>\n\t</ul>\n</footer>\n';
+
+}
+return __p
+};
+
+this["compiled"]["layout/pager"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+__p += '<ul class="pagination">\n\t<li><a href="#" data-num="prev">&laquo;</a></li>\n\t';
+ _.each(items, function(item){ ;
+__p += '\n\t<li ';
+ if(item.active){ ;
+__p += 'class="active"';
+ } ;
+__p += '><a href="#" data-num="' +
+((__t = ( item.num )) == null ? '' : __t) +
+'">' +
+((__t = ( item.num + 1 )) == null ? '' : __t) +
+'</a></li>\n\t';
+ }) ;
+__p += '\n\t<li><a href="#" data-num="next">&raquo;</a></li>\n</ul>';
 
 }
 return __p

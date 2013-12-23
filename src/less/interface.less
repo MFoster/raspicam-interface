@@ -48,9 +48,11 @@ li.dropdown:hover .dropdown-menu{
 	.make-md-column(4);
 	cursor:pointer;
 	div{
-		background-color: @gray-lighter;
+		background-color:@gray-lighter;
 		padding:10px;
 		margin:10px;
+		border:1px solid @gray-light;
+		border-radius:4px;
 	}
 	img{
 		width:50%;
@@ -59,6 +61,8 @@ li.dropdown:hover .dropdown-menu{
 	}
 	h4{
 		text-align: center;
+		font-size:1em;
+		font-weight: normal;
 	}
 }
 .photo-stage{
@@ -102,6 +106,11 @@ li.dropdown:hover .dropdown-menu{
 		&:extend(.nav all, .nav-pills all, .nav-stacked all);
 	}
 }
+.photo-grid-layout{
+	.pager-container div{
+		text-align:center;
+	}
+}
 .photo-history-layout{
 	display:flex;
 	flex-direction:row;
@@ -114,4 +123,5 @@ li.dropdown:hover .dropdown-menu{
 	.photo-image{
 		flex:100% 60%;
 	}
+
 }

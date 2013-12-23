@@ -2,7 +2,8 @@ define(["marionette"], function(Marionette){
 	return Marionette.Layout.extend({
 		template : "history/photo-grid-layout",
 		regions : {
-			content : ".photo-content"
+			content : ".photo-content",
+			pager : ".pager-container"
 		},
 		events : {
 			"click .photo-grid-item" : "handleGridItemClick",

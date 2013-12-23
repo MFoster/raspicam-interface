@@ -1,0 +1,7 @@
+<ul class="pagination">
+	<li><a href="#" data-num="prev">&laquo;</a></li>
+	<% _.each(items, function(item){ %>
+	<li <% if(item.active){ %>class="active"<% } %>><a href="#" data-num="<%= item.num %>"><%= item.num + 1 %></a></li>
+	<% }) %>
+	<li><a href="#" data-num="next">&raquo;</a></li>
+</ul>

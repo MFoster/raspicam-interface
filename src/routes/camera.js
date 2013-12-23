@@ -8,15 +8,22 @@ var cameraConfig = {
 var debounceTime = 500;
 
 var cameraFilePath = __dirname + "/../public/images/camera/photo/";
-
+var camera = new RaspiCam(cameraConfig);
+var started = false,
+		name = false;
+camera.on("exit", function(){
+	started = false;
+})
 exports.photo = function(request, response){
-	var name = new Date().getTime() + ".jpg";
-	cameraConfig.output = cameraFilePath + name;
-	var camera = new RaspiCam(cameraConfig);
-	camera.on("change", debounce(camera.stop, debounceTime));
-	camera.on("exit", function(){
+	camera.once("exit", function(){
 		response.send({ message : "Successfully captured image", name : name });
 	});
+
+	if(started){
+		return false;
+	}
+ 	name = new Date().getTime() + ".jpg";
+	camera.set("output", cameraFilePath + name);
 	camera.start();
 }
 

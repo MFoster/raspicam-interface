@@ -6654,6 +6654,8 @@ li.dropdown:hover .dropdown-menu {
   background-color: #eeeeee;
   padding: 10px;
   margin: 10px;
+  border: 1px solid #999999;
+  border-radius: 4px;
 }
 .photo-grid-item img {
   width: 50%;
@@ -6662,6 +6664,8 @@ li.dropdown:hover .dropdown-menu {
 }
 .photo-grid-item h4 {
   text-align: center;
+  font-size: 1em;
+  font-weight: normal;
 }
 .photo-stage button {
   float: left;
@@ -6704,6 +6708,9 @@ li.dropdown:hover .dropdown-menu {
     float: left;
     width: 66.66666666666666%;
   }
+}
+.photo-grid-layout .pager-container div {
+  text-align: center;
 }
 .photo-history-layout {
   display: flex;

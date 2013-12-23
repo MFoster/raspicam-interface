@@ -11,7 +11,9 @@ define(["marionette"], function(Marionette){
 			"click a" : "handleClick"
 		},
 		handleClick : function(e){
-			return false;
+			if(e.currentTarget.getAttribute("href").search(/^http/i) == -1){
+				return false;
+			}
 		}
 	})
 
