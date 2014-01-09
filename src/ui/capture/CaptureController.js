@@ -1,11 +1,11 @@
-define(["marionette", "./CaptureLayout", "jquery", "src/ui/layout/PhotoStageView"], 
-	function(Marionette, CaptureLayout, jQuery, StageView){
+define(["marionette", "./CaptureLayout", "jquery", "src/ui/layout/PhotoStageView", "src/ui/core/PhotoModel"], 
+	function(Marionette, CaptureLayout, jQuery, StageView, PhotoModel){
 
 	return Marionette.Controller.extend({
 		constructor : function(options){
 			Marionette.Controller.prototype.constructor.apply(this, arguments);
 			this.layout = new CaptureLayout();
-			this.stageModel = options.collection.first();
+			this.stageModel = options.collection.first() || new PhotoModel();
 			this.stageModel.url = "/capture";
 			this.stageView = new StageView({ model : this.stageModel });
 			this.layout.on("submit", this.handleSubmit.bind(this));

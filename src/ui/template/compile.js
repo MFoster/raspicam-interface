@@ -132,6 +132,16 @@ __p += '<div class="photo-stage">\n\t<div class="header">\n\t\t<span class="inpu
 return __p
 };
 
+this["compiled"]["layout/empty-stage"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<div class="photo-stage">\n\t<div class="header">\n\t\t<span class="input-group-btn">\n\t\t\t\n\t\t<button data-action="close">Done</button>\n\t\t</span>\n\t\t<h4>\n\t\t Not Available.\t\n\t\t</h4>\n\n\t\t\n\t</div>\n\t<div class="photo-center-stage">\n\t\t<img src="/images/camera_shutter.png" alt="" id="photo-primary"/>\n\t</div>\n</div>';
+
+}
+return __p
+};
+
 this["compiled"]["layout/full-width"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
@@ -160,6 +170,32 @@ __p += '><a href="#" data-num="' +
 '</a></li>\n\t';
  }) ;
 __p += '\n\t<li><a href="#" data-num="next">&raquo;</a></li>\n</ul>';
+
+}
+return __p
+};
+
+this["compiled"]["layout/photo-stage"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<div class="photo-stage">\n\t<div class="header">\n\t\t<span class="input-group-btn">\n\t\t\t\n\t\t<button data-action="close">Done</button>\n\t\t</span>\n\t\t<h4>\n\t\t\t' +
+((__t = ( getLongDay(day) )) == null ? '' : __t) +
+', ' +
+((__t = ( getLongMonth(month) )) == null ? '' : __t) +
+' ' +
+((__t = ( date )) == null ? '' : __t) +
+'' +
+((__t = ( getDateSuffix(date) )) == null ? '' : __t) +
+' ' +
+((__t = ( year )) == null ? '' : __t) +
+' ' +
+((__t = ( zeroPad(hour) )) == null ? '' : __t) +
+':' +
+((__t = ( zeroPad(minute) )) == null ? '' : __t) +
+'\n\t\t</h4>\n\n\t\t\n\t</div>\n\t<div class="photo-center-stage">\n\t\t<img src="' +
+((__t = ( getImageUrl(name) )) == null ? '' : __t) +
+'" alt="" id="photo-primary"/>\n\t</div>\n</div>';
 
 }
 return __p

@@ -46,7 +46,7 @@ define(["marionette", "backbone"], function(Marionette, Backbone){
 			return this.masterCollection.slice(this.index * this.size, this.index * this.size + this.size)
 		},
 		reduceMaster : function(){
-			var pages = this.getPageMax() + 1;
+			var pages = this.getPageMax() + (this.masterCollection.size() % this.size == 0 ? 0 : 1);
 			var arr = [];
 			for(var i = 0; i < pages; i++){
 				arr.push(new Backbone.Model({ num : i, active : (i === this.index)}));

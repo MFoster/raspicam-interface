@@ -6652,13 +6652,14 @@ li.dropdown:hover .dropdown-menu {
 }
 .photo-grid-item div {
   background-color: #eeeeee;
-  padding: 10px;
+  min-height: 150px;
+  padding: 20px;
   margin: 10px;
   border: 1px solid #999999;
   border-radius: 4px;
 }
 .photo-grid-item img {
-  width: 50%;
+  width: 90%;
   display: block;
   margin: auto;
 }
