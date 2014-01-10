@@ -1,38 +1,64 @@
 var RaspiCam = require("raspicam");
 var debounce = require("debounce");
 var fs = require("fs");
-var cameraConfig = {
-	mode : "photo",
-	timelapse : 100,
-	output : "output.jpg"
+
+var CameraProxy = function(){
+	this.responses = [];
+	this.defaultConfig = {
+		mode : "photo",
+		timelapse : 10,
+		output : "photo.jpg"
+	};
 };
-var debounceTime = 500;
+
+CameraProxy.prototype = {
+	started : false,
+	mergeConfig : function(config){
+		this.config = this.defaultConfig;
+		for(var i in config){
+			this.config[i] = config[i];
+		}
+		return this.config;
+	},
+	createCamera : function(config){
+		return new RaspiCam(config);
+	},
+	isStarted : function(){
+		return this.started;
+	},
+	capture : function(response, config){
+		this.addResponse(response);
+		if(!this.isStarted()){
+			this.start(config);
+		}
+	},
+	addResponse : function(response){
+		this.responses.push(response);
+	},
+	start : function(config){
+		this.camera = this.createCamera(this.mergeConfig(config));
+		this.camera.on("exit", this.handleExit.bind(this));
+		this.camera.start();
+		this.started = true;
+	},
+	handleExit : function(cam){
+		var name = this.config.name;
+		this.responses.forEach(function(response){
+			response.send({ message : "Captured image", name : name });
+		});
+		this.responses = []
+		this.started = false;
+	}
+
+}
 
 var cameraFilePath = __dirname + "/../public/images/camera/photo/";
-var camera = new RaspiCam(cameraConfig);
-var started = false,
-		name = new Date().getTime() + ".jpg";
+var camera = new CameraProxy(); //new RaspiCam(cameraConfig);
 
-camera.on("exit", function(){
-	started = false;
-});
-
-camera.on("change", function(){
-	setTimeout(camera.stop, cameraConfig.timelapse);
-});
 
 exports.photo = function(request, response){
-	camera.once("exit", function(){
-		response.send({ message : "Successfully captured image", name : name });
-	});
-
-	if(started){
-		return false;
-	}
- 	name = new Date().getTime() + ".jpg";
-	camera.set("output", cameraFilePath + name);
-	camera.start();
-	started = true;
+ 	var name = new Date().getTime() + ".jpg";
+	camera.capture(response, { output : cameraFilePath + name });
 }
 
 exports.photoHistory = function(request, response){
